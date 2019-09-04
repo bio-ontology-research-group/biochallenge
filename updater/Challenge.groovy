@@ -14,6 +14,16 @@ class SubChallenge {
     Integer numberOfVersions = 0
     def directory = null
 
+    SubChallenge(File config) {
+	if (config.exists()) {
+	    JsonSlurper slurper = new JsonSlurper()
+	    def json = slurper.parse(config)
+	    this.sparqlquery = json.query
+	    this.sparqlendpoint = json.endpoint
+	    this.directory = json.dir
+	}
+    }
+
     SubChallenge(dir) {
 	this.directory = dir
 	def f = new File(""+dir+"/config.json")
@@ -69,6 +79,27 @@ class SubChallenge {
 	    return -1
 	}
     }
+
+    public Integer generateNewVersionFromSPARQL(String dir) {
+	try {
+	    def date = new Date()
+	    def sdf = new SimpleDateFormat("dd-MM-yyyy")
+	    def pd = sdf.format(date)
+//	    new File(this.directory + "/"+pd + "/").mkdirs()
+	    def map = runSPARQLQuery()
+	    def fout = new PrintWriter(new BufferedWriter(new FileWriter(dir+"/data.tsv")))
+	    map.each { p, d ->
+		fout.println("$p\t$d")
+	    }
+	    fout.flush()
+	    fout.close()
+	    return 0
+	} catch (Exception E) {
+	    E.printStackTrace()
+	    return -1
+	}
+    }
+
 }
 
 
@@ -77,9 +108,10 @@ def cli = new CliBuilder()
 cli.with {
     usage: 'Self'
     h longOpt:'help', 'this information'
-    c longOpt:'challenge', 'challenge directory/name', args:1, required:true
-    n longOpt:'new-challenge', 'create a new challenge', args:0, required:false
+    c longOpt:'challenge', 'challenge directory', args:1, required:true
+//    n longOpt:'new-challenge', 'create a new challenge', args:0, required:false
     u longOpt:'update', 'update challenge data', args:0, required:false
+    j longOpt:'json-config', 'path to config file', args:1, required:true
 }
 def opt = cli.parse(args)
 if( !opt ) {
@@ -91,14 +123,19 @@ if( opt.h ) {
     return
 }
 
-def challenge = new SubChallenge(opt.c)
+def challenge = null
 
-if (opt.u) {
-    if (challenge.generateNewVersionFromSPARQL() == 0) {
-	println "Challenge \"${opt.c}\" updated successfully."
+if (opt.j) {
+    def f = new File(opt.j)
+    challenge = new SubChallenge(f)
+}
+
+if (opt.c) {
+    if (challenge.generateNewVersionFromSPARQL(opt.c) == 0) {
+//	println "Challenge \"${challenge.directory}\" updated successfully."
 	return 0
     } else {
-	println "Challenge \"${opt.c}\" update failed; please check the output."
+//	println "Challenge \"${challenge.directory}\" update failed; please check the output."
 	return 23
     }
 }
