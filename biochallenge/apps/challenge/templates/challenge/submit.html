@@ -1,0 +1,27 @@
+{% extends 'challenge/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-6">
+      <h2>{{ release.challenge.name }} ({{ release.version }})</h2>
+      <img class="img-fluid" src="{{ release.challenge.image.url }}"/>
+      <p>{{ release.challenge.description }}</p>
+    </div>
+    <div class="col-6">
+      <form class="form" method="post" enctype="multipart/form-data">
+	{% csrf_token %}
+	{% for field in form %}
+	<div class="form-group">
+	  {{ field.label }}
+	  {{ field|add_class:"form-control" }}
+	  {{ field.error }}
+	</div>
+	{% endfor %}
+	<button class="btn btn-primary" type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

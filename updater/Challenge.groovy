@@ -132,11 +132,9 @@ if (opt.j) {
 
 if (opt.c) {
     if (challenge.generateNewVersionFromSPARQL(opt.c) == 0) {
-//	println "Challenge \"${challenge.directory}\" updated successfully."
 	return 0
     } else {
-//	println "Challenge \"${challenge.directory}\" update failed; please check the output."
-	return 23
+	System.exit(1)
     }
 }
 
