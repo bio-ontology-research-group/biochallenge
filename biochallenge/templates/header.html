@@ -1,0 +1,42 @@
+{% load static from staticfiles %}
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg bg-secondary text-uppercase
+	    fixed-top navbar-shrink" id="mainNav">
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="#page-top">Bio Challenge</a>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "challenges" %}">Challenges</a>
+        </li>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "about" %}">About</a>
+        </li>
+        <li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+	     target="_blank"href="https://borg.kaust.edu.sa/Pages/People.aspx?t=Current">Contact</a>
+        </li>
+	<li>
+	{% if user.is_authenticated %}
+	<li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "submissions" %}">My Submissions</a>
+        </li>
+	<li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "profile" %}">Profile</a>
+        </li>
+	<li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "account_logout" %}">Logout</a>
+        </li>
+	{% else %}
+	<li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "account_login" %}">SignIn</a>
+        </li>
+	<li class="nav-item mx-0 mx-lg-1">
+          <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="{% url "account_signup" %}">SignUp</a>
+        </li>
+	{% endif %}    
+	</li>
+      </ul>
+    </div>
+  </div>
+</nav>
