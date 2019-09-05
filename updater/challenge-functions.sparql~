@@ -38,16 +38,17 @@ PREFIX slm:<https://swisslipids.org/rdf/>
 PREFIX sp:<http://spinrdf.org/sp#> 
 PREFIX uberon:<http://purl.obolibrary.org/obo/uo#> 
 PREFIX up:<http://purl.uniprot.org/core/> 
-SELECT ?prot ?val
+SELECT ?prot ?tax ?go ?sup ?eco
 WHERE
 {
-
-        ?prot up:annotation ?o .
-  		?o a up:Disease_Annotation .
-  		?o up:disease ?val .
-  	[] rdf:subject ?o ;
-                   rdf:predicate up:disease ;
-                   rdf:object ?val ;
+	VALUES (?eco) {
+	       <http://purl.obolibrary.org/obo/ECO_0000269> <http://purl.obolibrary.org/obo/ECO_0000303> <http://purl.obolibrary.org/obo/ECO_0000305>
+	} .
+        ?prot up:classifiedWith ?o .
+  		?o a owl:Class .
+  	[] rdf:subject ?prot ;
+                   rdf:predicate up:classifiedWith ;
+                   rdf:object ?o ;
                    up:attribution /up:evidence ?eco .
-	FILTER (?eco IN (<http://purl.obolibrary.org/obo/ECO_0000269>, <http://purl.obolibrary.org/obo/ECO_0000303>, <http://purl.obolibrary.org/obo/ECO_0000305>) ) .
-}
+  		?o rdfs:subClassOf ?sup .
+} LIMIT 10
