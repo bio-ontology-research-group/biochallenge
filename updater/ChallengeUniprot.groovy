@@ -10,21 +10,21 @@ import java.util.concurrent.*
 
 
 class SubChallenge {
-    def THREADS = 8
+    def THREADS = 2
     def sparqlquery = null
     def sparqlendpoint = null
     Integer numberOfVersions = 0
     def directory = null
     def taxa = new LinkedHashSet()
 
-    SubChallenge(File config) {
+    SubChallenge(File config, String dir) {
 	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
 	if (config.exists()) {
 	    JsonSlurper slurper = new JsonSlurper()
 	    def json = slurper.parse(config)
 	    this.sparqlquery = json.query
 	    this.sparqlendpoint = json.endpoint
-	    this.directory = json.dir
+	    this.directory = dir
 	}
     }
 
@@ -54,7 +54,7 @@ class SubChallenge {
     }
 
     protected Map runSPARQLQuery() {
-	ConcurrentHashMap m = new ConcurrentHashMap()
+	def fout = new PrintWriter(new BufferedWriter(new FileWriter(this.directory+"/data.tsv")))
 	GParsPool.withPool(this.THREADS) { pool ->
 	    taxa.eachParallel { taxon ->
 		println "Doing $taxon..."
@@ -64,26 +64,21 @@ class SubChallenge {
 		while (resultSet.hasNext()) {
 		    def row = resultSet.next()
 		    // check here evidence codes
-		    m[row['prot']] = row['val']
+		    //m[row['prot']] = row['val']
+		    //println row['prot'].toString()+"\t"+row['val'].toString()
+		    fout.println(""+row['prot']+"\t"+row['val'])
 		}
 	    }
 	}
-	m
+	fout.flush()
+	fout.close()
+	null
     }
     
     public Integer generateNewVersionFromSPARQL() {
 	try {
-	    def date = new Date()
-	    def sdf = new SimpleDateFormat("dd-MM-yyyy")
-	    def pd = sdf.format(date)
-	    new File(this.directory + "/"+pd + "/").mkdirs()
+//	    new File(this.directory + "/"+pd + "/").mkdirs()
 	    def map = runSPARQLQuery()
-	    def fout = new PrintWriter(new BufferedWriter(new FileWriter(this.directory + "/"+pd + "/" + "data.tsv")))
-	    map.each { p, d ->
-		fout.println("$p\t$d")
-	    }
-	    fout.flush()
-	    fout.close()
 	    return 0
 	} catch (Exception E) {
 	    E.printStackTrace()
@@ -138,7 +133,7 @@ def challenge = null
 
 if (opt.j) {
     def f = new File(opt.j)
-    challenge = new SubChallenge(f)
+    challenge = new SubChallenge(f, opt.c)
 }
 
 if (opt.c) {
