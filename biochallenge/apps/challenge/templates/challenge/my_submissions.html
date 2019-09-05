@@ -1,0 +1,29 @@
+{% extends 'challenge/base.html' %}
+
+{% block content %}
+<div class="challenge">
+<div class="container">
+  <div class="row">
+    <h2>My submissions</h2>
+    <table class="table table-striped">
+      <thead><th>#</th><th>Challenge</th><th>Release</th><th>Date</th><th>File</th><th>Status</th></thead>
+      <tbody>
+	{% for sub in object_list %}
+	<tr>
+	  <td> {{ forloop.counter }} </td>
+	  <td> {{ sub.release.challenge.name }} </td>
+	  <td> {{ sub.release.version }} </td>
+	  <td> {{ sub.date }} </td>
+	  <td>
+	    <a href="{{ sub.predictions_file.url }}">
+	      <i class="fa fa-download"></i></a>
+	  </td>
+	  <td> {{ sub.status }} </td>
+	</tr>
+	{% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+{% endblock %}

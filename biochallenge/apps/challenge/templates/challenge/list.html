@@ -1,0 +1,25 @@
+{% extends 'challenge/base.html' %}
+
+{% block content %}
+<div class="challenge">
+<div class="container">
+  <div class="row">
+    {% for challenge in object_list %}
+      <div class="col-md-6 col-lg-4">
+	<a href="{% url "challenge_view" challenge.pk %}">
+	<div class="challenge-item mx-auto">
+          <div class="challenge-item-caption d-flex align-items-center
+		    justify-content-center h-100 w-100">
+	    <div class="challenge-item-caption-content text-center text-white">
+	      <strong><h3>{{ challenge.name }}</h3></strong>
+	    </div>
+	  </div>
+	  <img class="img-fluid" src="{{ challenge.image.url }}" alt="">
+	</div>
+	</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+</div>
+{% endblock %}
