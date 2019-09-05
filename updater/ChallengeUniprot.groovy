@@ -10,7 +10,8 @@ import java.util.concurrent.*
 
 
 class SubChallenge {
-    def THREADS = 2
+    def THREADS = 8
+    def RETRIES = 3
     def sparqlquery = null
     def sparqlendpoint = null
     Integer numberOfVersions = 0
@@ -58,15 +59,24 @@ class SubChallenge {
 	GParsPool.withPool(this.THREADS) { pool ->
 	    taxa.eachParallel { taxon ->
 		println "Doing $taxon..."
-		Query query = QueryFactory.create( this.sparqlquery.replaceAll("TAXON", "<"+taxon+">") )
-		QueryExecution qe = QueryExecutionFactory.sparqlService(this.sparqlendpoint, query)
-		ResultSet resultSet = qe.execSelect()
-		while (resultSet.hasNext()) {
-		    def row = resultSet.next()
-		    // check here evidence codes
-		    //m[row['prot']] = row['val']
-		    //println row['prot'].toString()+"\t"+row['val'].toString()
-		    fout.println(""+row['prot']+"\t"+row['val'])
+		def tries = this.RETRIES
+		while (tries > 0 ) {
+		    try {
+			Query query = QueryFactory.create( this.sparqlquery.replaceAll("TAXON", "<"+taxon+">") )
+			QueryExecution qe = QueryExecutionFactory.sparqlService(this.sparqlendpoint, query)
+			ResultSet resultSet = qe.execSelect()
+			while (resultSet.hasNext()) {
+			    def row = resultSet.next()
+			    // check here evidence codes
+			    //m[row['prot']] = row['val']
+			    //println row['prot'].toString()+"\t"+row['val'].toString()
+			    fout.println(""+row['prot']+"\t"+row['val'])
+			}
+			fout.flush()
+			tries = -1
+		    } catch (Exception E) {
+			E.printStackTrace()
+		    }
 		}
 	    }
 	}
