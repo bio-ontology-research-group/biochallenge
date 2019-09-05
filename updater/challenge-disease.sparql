@@ -1,0 +1,52 @@
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+PREFIX GO:<http://purl.obolibrary.org/obo/GO_> 
+PREFIX allie:<http://allie.dbcls.jp/> 
+PREFIX CHEBI:<http://purl.obolibrary.org/obo/CHEBI_> 
+PREFIX cco:<http://rdf.ebi.ac.uk/terms/chembl#> 
+PREFIX codoa:<http://purl.glycoinfo.org/ontology/codao#> 
+PREFIX ensembl:<http://rdf.ebi.ac.uk/resource/ensembl/> 
+PREFIX ensemblexon:<http://rdf.ebi.ac.uk/resource/ensembl.exon/> 
+PREFIX ensemblprotein:<http://rdf.ebi.ac.uk/resource/ensembl.protein/> 
+PREFIX ensemblterms:<http://rdf.ebi.ac.uk/terms/ensembl/> 
+PREFIX ensembltranscript:<http://rdf.ebi.ac.uk/resource/ensembl.transcript/> 
+PREFIX glycan:<http://purl.jp/bio/12/glyco/glycan#> 
+PREFIX glyconnect:<https://purl.org/glyconnect/> 
+PREFIX identifiers:<http://identifiers.org/> 
+PREFIX mesh:<http://id.nlm.nih.gov/mesh/> 
+PREFIX mnet:<https://rdf.metanetx.org/mnet/> 
+PREFIX mnx:<https://rdf.metanetx.org/schema/> 
+PREFIX orthodb:<http://purl.orthodb.org/> 
+PREFIX orthodbGroup:<http://purl.orthodb.org/odbgroup/> 
+PREFIX patent:<http://data.epo.org/linked-data/def/patent/> 
+PREFIX pubmed:<http://rdf.ncbi.nlm.nih.gov/pubmed/> 
+PREFIX rh:<http://rdf.rhea-db.org/> 
+PREFIX schema:<http://schema.org/> 
+PREFIX sh:<http://www.w3.org/ns/shacl#> 
+PREFIX sio:<http://semanticscience.org/resource/> 
+PREFIX slm:<https://swisslipids.org/rdf/> 
+PREFIX sp:<http://spinrdf.org/sp#> 
+PREFIX uberon:<http://purl.obolibrary.org/obo/uo#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+SELECT ?prot ?dis ?eco
+WHERE
+{
+        ?prot up:annotation ?o .
+  		?o a up:Disease_Annotation .
+  		?o up:disease ?dis .
+  	[] rdf:subject ?o ;
+                   rdf:predicate up:disease ;
+                   rdf:object ?dis ;
+                   up:attribution /up:evidence ?eco .
+}
+LIMIT 10
