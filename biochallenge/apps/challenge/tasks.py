@@ -4,6 +4,7 @@ from challenge.models import Challenge, Release
 from django.utils import timezone
 import requests
 import datetime
+import os
 
 
 def get_release_version(endpoint):
@@ -42,8 +43,10 @@ def load_release(challenge_id):
     challenge.save()
     
     # Load release data
+    env = dict(os.environ)
+    env['JAVA_OPTS'] = '-Xms2g -Xmx32g'
     p = Popen(['groovy', 'updater/Challenge.groovy', '-c', release.get_dir(),
-               '-j', release.get_config_file(),])
+               '-j', release.get_config_file(),], env=env)
     
     if p.wait() == 0:
         challenge.status = challenge.ACTIVE
