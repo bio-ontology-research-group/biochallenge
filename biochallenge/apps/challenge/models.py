@@ -20,7 +20,10 @@ class Challenge(models.Model):
         (UPDATING, UPDATING),
         (UPDATE_FAILED, UPDATE_FAILED),
         (WITHDRAWN, WITHDRAWN))
-    
+
+    DEFAULT = 'updater/Challenge.groovy'
+    PARALLEL = 'updater/ChallengeUniprot.groovy'
+    SCRIPTS = (("default", DEFAULT), ("parallel", PARALLEL))
     name = models.CharField(max_length=127)
     status = models.CharField(max_length=15, choices=STATUSES)
     description = models.TextField()
@@ -29,6 +32,7 @@ class Challenge(models.Model):
     modified_date = models.DateTimeField(default=timezone.now)
     sparql_endpoint = models.CharField(max_length=255)
     sparql_query = models.TextField()
+    script = models.CharField(max_length=31, default=DEFAULT, choices=SCRIPTS)
 
     def __str__(self):
         return self.name
