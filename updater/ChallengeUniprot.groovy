@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat
 import groovy.json.*
 import groovyx.gpars.*
 import java.util.concurrent.*
+import java.util.zip.GZIPOutputStream
 
 
 class SubChallenge {
@@ -128,7 +129,9 @@ SELECT DISTINCT ?organism WHERE {
     }
     
     protected Map runSPARQLQuery() {
-	def fout = new PrintWriter(new BufferedWriter(new FileWriter(this.directory+"/data.tsv")))
+	def fout = new PrintWriter(new GZIPOutputStream(new FileOutputStream(this.directory+"/data.tsv.gz"), true))
+
+//	def fout = new PrintWriter(new BufferedWriter(new FileWriter())
 	GParsPool.withPool(this.THREADS) { pool ->
 	    taxa.eachParallel { taxon ->
 		println "Doing $taxon..."
