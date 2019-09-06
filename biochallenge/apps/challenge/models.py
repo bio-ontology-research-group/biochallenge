@@ -60,7 +60,7 @@ class Release(models.Model):
         return os.path.join(self.get_dir(), 'config.json')
 
     def get_data_url(self):
-        return '/' + os.path.join(self.get_dir(), 'data.tsv')
+        return '/' + os.path.join(self.get_dir(), 'data.tsv.gz')
 
 
 def create_release_files(sender, instance, created, **kwargs):

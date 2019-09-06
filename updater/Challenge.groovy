@@ -6,6 +6,9 @@ import org.apache.jena.query.*
 import org.apache.jena.rdf.model.RDFNode
 import java.text.SimpleDateFormat
 import groovy.json.*
+import java.util.zip.GZIPOutputStream
+import java.io.FileOutputStream
+
 
 class SubChallenge {
 
@@ -41,58 +44,37 @@ class SubChallenge {
 	this.sparqlendpoint = endpoint
 	
 	def json = JsonOutput.toJson(['endpoint':this.sparqlendpoint, 'query':this.sparqlquery])
-	def fout = new PrintWriter(new BufferedWriter(new FileWriter(dir+"/config.json")))
+	def fout = new PrintWriter(new BufferedWriter(new FileWriter(dir + "/config.json")))
 	fout.println(json)
 	fout.flush()
 	fout.close()
     }
 
-    protected Map runSPARQLQuery() {
-	Map m = [:]
+    protected Map runSPARQLQuery(filename) {
+	def fout = new PrintWriter(
+	    new GZIPOutputStream(new FileOutputStream(filename), true))
 	Query query = QueryFactory.create( this.sparqlquery )
 	QueryExecution qe = QueryExecutionFactory.sparqlService(this.sparqlendpoint, query)
 	ResultSet resultSet = qe.execSelect()
+	Set<String> used = new HashSet<String>()
 	while (resultSet.hasNext()) {
 	    def row = resultSet.next()
 	    // check here evidence codes
-	    m[row['prot']] = row['val']
+	    def prot = row['prot'].toString()
+	    def val = row['val'].toString()
+	    def key = prot.substring(prot.lastIndexOf('/') + 1) + "_" + val.substring(val.lastIndexOf('/') + 1) 
+	    if (!used.contains(key)) {
+		fout.println("$prot\t$val")
+		used.add(key)
+	    }
 	}
-	m
+	fout.flush()
+	fout.close()
     }
     
-    public Integer generateNewVersionFromSPARQL() {
-	try {
-	    def date = new Date()
-	    def sdf = new SimpleDateFormat("dd-MM-yyyy")
-	    def pd = sdf.format(date)
-	    new File(this.directory + "/"+pd + "/").mkdirs()
-	    def map = runSPARQLQuery()
-	    def fout = new PrintWriter(new BufferedWriter(new FileWriter(this.directory + "/"+pd + "/" + "data.tsv")))
-	    map.each { p, d ->
-		fout.println("$p\t$d")
-	    }
-	    fout.flush()
-	    fout.close()
-	    return 0
-	} catch (Exception E) {
-	    E.printStackTrace()
-	    return -1
-	}
-    }
-
     public Integer generateNewVersionFromSPARQL(String dir) {
 	try {
-	    def date = new Date()
-	    def sdf = new SimpleDateFormat("dd-MM-yyyy")
-	    def pd = sdf.format(date)
-//	    new File(this.directory + "/"+pd + "/").mkdirs()
-	    def map = runSPARQLQuery()
-	    def fout = new PrintWriter(new BufferedWriter(new FileWriter(dir+"/data.tsv")))
-	    map.each { p, d ->
-		fout.println("$p\t$d")
-	    }
-	    fout.flush()
-	    fout.close()
+	    runSPARQLQuery(dir + "/data.tsv.gz")
 	    return 0
 	} catch (Exception E) {
 	    E.printStackTrace()
