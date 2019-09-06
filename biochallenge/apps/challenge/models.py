@@ -23,7 +23,7 @@ class Challenge(models.Model):
 
     DEFAULT = 'updater/Challenge.groovy'
     PARALLEL = 'updater/ChallengeUniprot.groovy'
-    SCRIPTS = (("default", DEFAULT), ("parallel", PARALLEL))
+    SCRIPTS = ((DEFAULT, DEFAULT), (DEFAULT, PARALLEL))
     name = models.CharField(max_length=127)
     status = models.CharField(max_length=15, choices=STATUSES)
     description = models.TextField()
