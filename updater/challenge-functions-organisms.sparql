@@ -39,7 +39,7 @@ PREFIX sp:<http://spinrdf.org/sp#>
 PREFIX uberon:<http://purl.obolibrary.org/obo/uo#> 
 PREFIX up:<http://purl.uniprot.org/core/> 
 
-SELECT ?prot (?go as ?val) WHERE {
+SELECT DISTINCT ?organism WHERE {
 
   	VALUES ?eco {
 	       <http://purl.obolibrary.org/obo/ECO_0000269> <http://purl.obolibrary.org/obo/ECO_0000303> <http://purl.obolibrary.org/obo/ECO_0000305> <http://purl.obolibrary.org/obo/ECO_0000315>
@@ -47,10 +47,6 @@ SELECT ?prot (?go as ?val) WHERE {
 	       <http://purl.obolibrary.org/obo/ECO_0000316> <http://purl.obolibrary.org/obo/ECO_0000270> <http://purl.obolibrary.org/obo/ECO_0000266> <http://purl.obolibrary.org/obo/ECO_0007005>
 	       <http://purl.obolibrary.org/obo/ECO_0000353> <http://purl.obolibrary.org/obo/ECO_0007001> <http://purl.obolibrary.org/obo/ECO_0000255> <http://purl.obolibrary.org/obo/ECO_0000247>
 	} .
-  {
-SELECT ?prot ?tax ?go ?sup ?eco
-WHERE
-{
 	?prot up:reviewed true .
     	[] rdf:subject ?prot ;
                    rdf:predicate up:classifiedWith ;
@@ -58,23 +54,5 @@ WHERE
                    up:attribution /up:evidence ?eco .
         ?prot up:classifiedWith ?go .
   		?go a owl:Class .
-		?prot up:organism TAXON .
-}}
- UNION
-  {
-
-SELECT ?prot ?tax ?go ?sup ?eco
-WHERE
-{
-	?prot up:reviewed true .
-    	[] rdf:subject ?prot ;
-                   rdf:predicate up:classifiedWith ;
-                   rdf:object ?o ;
-                   up:attribution /up:evidence ?eco .
-        ?prot up:classifiedWith ?o .
-  		?o a owl:Class .
-		?prot up:organism TAXON .
-  		?o rdfs:subClassOf ?go .
-} 
-             }
-  }
+		?prot up:organism ?organism .
+}
