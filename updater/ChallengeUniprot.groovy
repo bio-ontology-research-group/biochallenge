@@ -19,7 +19,7 @@ class SubChallenge {
     def taxa = new LinkedHashSet()
 
     SubChallenge(File config, String dir) {
-	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
+//	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
 	if (config.exists()) {
 	    JsonSlurper slurper = new JsonSlurper()
 	    def json = slurper.parse(config)
@@ -29,8 +29,10 @@ class SubChallenge {
 	}
     }
 
+    
+    
     SubChallenge(dir) {
-	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
+//	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
 	this.directory = dir
 	def f = new File(""+dir+"/config.json")
 	if (f.exists()) {
@@ -42,7 +44,7 @@ class SubChallenge {
     }
 
     SubChallenge(dir, query, endpoint) {
-	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
+//	new File("uniprot-taxa.txt").eachLine { this.taxa.add(it) }
 	this.directory = dir
 	this.sparqlquery = query
 	this.sparqlendpoint = endpoint
@@ -54,6 +56,77 @@ class SubChallenge {
 	fout.close()
     }
 
+    Integer getOrganisms() {
+	Query query = QueryFactory.create( """
+PREFIX keywords:<http://purl.uniprot.org/keywords/> 
+PREFIX uniprotkb:<http://purl.uniprot.org/uniprot/> 
+PREFIX taxon:<http://purl.uniprot.org/taxonomy/> 
+PREFIX ec:<http://purl.uniprot.org/enzyme/> 
+PREFIX rdf:<http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
+PREFIX skos:<http://www.w3.org/2004/02/skos/core#> 
+PREFIX owl:<http://www.w3.org/2002/07/owl#> 
+PREFIX bibo:<http://purl.org/ontology/bibo/> 
+PREFIX dc:<http://purl.org/dc/terms/> 
+PREFIX xsd:<http://www.w3.org/2001/XMLSchema#> 
+PREFIX faldo:<http://biohackathon.org/resource/faldo#> 
+PREFIX GO:<http://purl.obolibrary.org/obo/GO_> 
+PREFIX allie:<http://allie.dbcls.jp/> 
+PREFIX CHEBI:<http://purl.obolibrary.org/obo/CHEBI_> 
+PREFIX cco:<http://rdf.ebi.ac.uk/terms/chembl#> 
+PREFIX codoa:<http://purl.glycoinfo.org/ontology/codao#> 
+PREFIX ensembl:<http://rdf.ebi.ac.uk/resource/ensembl/> 
+PREFIX ensemblexon:<http://rdf.ebi.ac.uk/resource/ensembl.exon/> 
+PREFIX ensemblprotein:<http://rdf.ebi.ac.uk/resource/ensembl.protein/> 
+PREFIX ensemblterms:<http://rdf.ebi.ac.uk/terms/ensembl/> 
+PREFIX ensembltranscript:<http://rdf.ebi.ac.uk/resource/ensembl.transcript/> 
+PREFIX glycan:<http://purl.jp/bio/12/glyco/glycan#> 
+PREFIX glyconnect:<https://purl.org/glyconnect/> 
+PREFIX identifiers:<http://identifiers.org/> 
+PREFIX mesh:<http://id.nlm.nih.gov/mesh/> 
+PREFIX mnet:<https://rdf.metanetx.org/mnet/> 
+PREFIX mnx:<https://rdf.metanetx.org/schema/> 
+PREFIX orthodb:<http://purl.orthodb.org/> 
+PREFIX orthodbGroup:<http://purl.orthodb.org/odbgroup/> 
+PREFIX patent:<http://data.epo.org/linked-data/def/patent/> 
+PREFIX pubmed:<http://rdf.ncbi.nlm.nih.gov/pubmed/> 
+PREFIX rh:<http://rdf.rhea-db.org/> 
+PREFIX schema:<http://schema.org/> 
+PREFIX sh:<http://www.w3.org/ns/shacl#> 
+PREFIX sio:<http://semanticscience.org/resource/> 
+PREFIX slm:<https://swisslipids.org/rdf/> 
+PREFIX sp:<http://spinrdf.org/sp#> 
+PREFIX uberon:<http://purl.obolibrary.org/obo/uo#> 
+PREFIX up:<http://purl.uniprot.org/core/> 
+
+SELECT DISTINCT ?organism WHERE {
+
+  	VALUES ?eco {
+	       <http://purl.obolibrary.org/obo/ECO_0000269> <http://purl.obolibrary.org/obo/ECO_0000303> <http://purl.obolibrary.org/obo/ECO_0000305> <http://purl.obolibrary.org/obo/ECO_0000315>
+	       <http://purl.obolibrary.org/obo/ECO_0000314> <http://purl.obolibrary.org/obo/ECO_0000318> <http://purl.obolibrary.org/obo/ECO_0000250> <http://purl.obolibrary.org/obo/ECO_0000304>
+	       <http://purl.obolibrary.org/obo/ECO_0000316> <http://purl.obolibrary.org/obo/ECO_0000270> <http://purl.obolibrary.org/obo/ECO_0000266> <http://purl.obolibrary.org/obo/ECO_0007005>
+	       <http://purl.obolibrary.org/obo/ECO_0000353> <http://purl.obolibrary.org/obo/ECO_0007001> <http://purl.obolibrary.org/obo/ECO_0000255> <http://purl.obolibrary.org/obo/ECO_0000247>
+	} .
+	?prot up:reviewed true .
+    	[] rdf:subject ?prot ;
+                   rdf:predicate up:classifiedWith ;
+                   rdf:object ?o ;
+                   up:attribution /up:evidence ?eco .
+        ?prot up:classifiedWith ?go .
+  		?go a owl:Class .
+		?prot up:organism ?organism .
+}
+"""
+	)
+	QueryExecution qe = QueryExecutionFactory.sparqlService(this.sparqlendpoint, query)
+	ResultSet resultSet = qe.execSelect()
+	while (resultSet.hasNext()) {
+	    def row = resultSet.next()
+	    taxa.add(row["organism"])
+	}
+	return taxa.size()
+    }
+    
     protected Map runSPARQLQuery() {
 	def fout = new PrintWriter(new BufferedWriter(new FileWriter(this.directory+"/data.tsv")))
 	GParsPool.withPool(this.THREADS) { pool ->
@@ -144,6 +217,7 @@ def challenge = null
 if (opt.j) {
     def f = new File(opt.j)
     challenge = new SubChallenge(f, opt.c)
+    println "Parallelizing across " + challenge.getOrganisms() + " taxa."
 }
 
 if (opt.c) {
