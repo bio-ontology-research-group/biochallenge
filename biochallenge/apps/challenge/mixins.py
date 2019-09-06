@@ -1,4 +1,5 @@
 from challenge.models import Release
+from django.http import Http404
 
 
 class ReleaseMixin(object):
