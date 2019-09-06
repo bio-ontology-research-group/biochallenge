@@ -45,7 +45,7 @@ def load_release(challenge_id):
     # Load release data
     env = dict(os.environ)
     env['JAVA_OPTS'] = '-Xms2g -Xmx32g'
-    p = Popen(['groovy', 'updater/Challenge.groovy', '-c', release.get_dir(),
+    p = Popen(['groovy', challenge.script, '-c', release.get_dir(),
                '-j', release.get_config_file(),], env=env)
     
     if p.wait() == 0:
