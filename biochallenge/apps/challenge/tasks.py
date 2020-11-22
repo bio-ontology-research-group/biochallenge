@@ -1,4 +1,4 @@
-from celery import task
+from celery import shared_task
 from subprocess import Popen, PIPE
 from challenge.models import Challenge, Release
 from django.utils import timezone
@@ -18,7 +18,7 @@ def get_release_version(endpoint):
     date = timezone.now()
     return f'{date.year}_{date.month:02d}'
         
-@task
+@shared_task
 def load_release(challenge_id):
     challenge = Challenge.objects.get(pk=challenge_id)
     version = get_release_version(challenge.sparql_endpoint)
