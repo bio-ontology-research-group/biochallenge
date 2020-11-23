@@ -175,44 +175,33 @@ SITE_ID = 1
 SITE_DOMAIN = 'localhost:8000'
 SERVER_EMAIL = 'info@bio2vec.net'
 
-# Celery configuration
-# RABBIT_HOST = 'localhost'
-# RABBIT_PORT = 5672
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
-# CELERY_broker_url = 'pyamqp://{user}:{pwd}@{host}:{port}//'.format(
-#     user=os.environ.get('RABBIT_USER', 'guest'),
-#     pwd=os.environ.get('RABBIT_PASSWORD', 'guest'),
-#     host=RABBIT_HOST,
-#     port=RABBIT_PORT)
-
-CELERY_broker_url = 'redis://localhost:6379/0'
-accept_content = ['json']
-task_serializer = 'json'
-result_serializer = 'json'
-
-result_backend = 'rpc://'
+CELERY_RESULT_BACKEND = 'rpc://'
 CELERY_WORKER_CONCURRENCY = 24
-CELERY_broker_pool_limit = 100
-CELERY_broker_connection_timeout = 10
+CELERY_BROKER_POOL_LIMIT = 100
+CELERY_BROKER_CONNECTION_TIMEOUT = 10
 
 # configure queues, currently we have only one
-task_default_queue = 'default'
-task_queues = (
+CELERY_TASK_DEFAULT_QUEUE = 'default'
+CELERY_TASK_QUEUES = (
     Queue('default', Exchange('default'), routing_key='default'),
 )
 
 # Sensible settings for celery
-task_always_eager = False
-task_acks_late = True
-task_publish_retry = True
-worker_disable_rate_limits = False
+CELERY_TASK_ALWAYS_EAGER = False
+CELERY_TASK_ACKS_LATE = True
+CELERY_TASK_PUBLISH_RETRY = True
+CELERY_WORKER_DISABLE_RATE_LIMITS = False
 
 # By default we will ignore result
 # If you want to see results and try out tasks interactively, change it to False
 # Or change this setting on tasks level
-task_ignore_result = True
-CELERY_SEND_TASK_ERROR_EMAILS = False
-result_expires = 600
+CELERY_TASK_IGNORE_RESULT = True
+CELERY_RESULT_EXPIRES = 600
 
 FILE_UPLOAD_HANDLERS = [
     # 'django.core.files.uploadhandler.MemoryFileUploadHandler',
