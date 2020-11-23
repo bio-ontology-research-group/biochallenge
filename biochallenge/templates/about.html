@@ -4,7 +4,46 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <p>This project was started at BioHackathon2019</p>
+      <h1>SPARQL-based evaluation of prediction tasks</h1>
+      <p>
+	Machine learning models are now widely applied to predict
+	biologically meaningful relations. Examples include the
+	prediction of protein functions, gene disease associations,
+	association of proteins and pathways, drug targets, drug
+	indications, pharmacological effects, and similar. Often, the
+	evaluation of these methods is based on synthetic datasets or
+	by withholding parts of a data set and reporting predictive
+	performance measures on this set. However, such evaluation
+	methods could be prone to biases; for example, testing on a
+	randomly selected subset of data may retain some information
+	that makes predictions overly simply (or hard) and
+	consequently the performance measures may not accurately
+	reflect how well relations can be predicted in the future.
+      </p>
+      <p>
+	One effort to resolve this issue is to perform a time-based
+	evaluation where predictions are submitted at a time and, after
+	a period of waiting, these predictions are evaluated on new
+	knowledge that became available. Large-scale evaluation
+	efforts such as CASP (for protein structures) or CAFA (for
+	protein functions) follow such an approach.
+      </p>
+      <p>
+	Running such a challenge takes a significant amount of time as
+	submission formats have to be defined and processed, new
+	knowledge has to be aggregated, and a ranking generated. As
+	lots of new knowledge is now being made available through
+	public SPARQL endpoints, we have an opportunity to define such
+	challenges for any type of association that can be discovered
+	through (federated) SPARQL queries.
+      </p>
+      <p>
+	We provide a method to define and run challenges, to
+	submit predictions for them and evaluate. SPARQL queries we
+	use for the challenges can be found and tested at
+	the <a href="http://biohackathon.org/rest/">BioHackathon
+	SPARQlist</a>.
+      </p>
     </div>
   </div>
 </div>
