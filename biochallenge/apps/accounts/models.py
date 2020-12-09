@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, pre_save
 from django.utils.translation import ugettext as _
 from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 def check_unique_email(sender, instance, **kwargs):
@@ -28,3 +29,32 @@ def create_user_profile(sender, instance, created, **kwargs):
             user=instance)
 
 post_save.connect(create_user_profile, sender=User)
+
+
+class Team(models.Model):
+    name = models.CharField(max_length=64, unique=True)
+    description = models.TextField(max_length=1024)
+    logo = models.ImageField()
+    created_date = models.DateTimeField(default=timezone.now)
+    created_user = models.ForeignKey(
+        User, related_name='created_teams', null=True, on_delete=models.SET_NULL)
+    members = models.ManyToManyField(User, through='Member', related_name='teams')
+
+
+class MemberManager(models.Manager):
+    use_for_related_fields = True
+
+    def add_member(self, user, team):
+        self.create(user=user, team=team)
+
+    def remove_member(self, user, team):
+        self.filter(user=user, team=team).delete()
+
+
+class Member(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE)
+    is_admin = models.BooleanField(default=False)
+    joined_date = models.DateTimeField(default=timezone.now)
+    
+    objects = MemberManager()
