@@ -1,37 +1,26 @@
-## Welcome to GitHub Pages
+# Continuous Evaluation of Relational Learning in Biology (CERLIB)
 
-You can use the [editor on GitHub](https://github.com/bio-ontology-research-group/biochallenge/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## Rationale
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+The analysis of biological networks has long been a central component of computational biology. These networks represent biological entities and their interactions. Knowledge graphs in biology can be used to represent biological networks and also to represent propositions believed to be true within a domain. Networks and knowledge graph form a crucial component of life science infrastructure where hundreds of data- and knowledge-bases have been developed that make their information available in a graph-based form. 
 
-### Markdown
+Networks and knowledge graphs are not only used to store and retrieve information but are also used for network- and knowledge-based analyses. One type of analysis includes determining whether a relation holds true or false within a knowledge base; this question can be solved deductively, inductively, or transductively. In the past 5 years, we have witnessed a proliferation of methods based on machine learning that address the problem of predicting relations from graph-based knowledge; these relational learning methods include knowledge graph embedding methods and graph neural networks. While these methods are developed to solve tasks in many knowledge graphs, they are rarely evaluated and compared on a variety of biological knowledge. Moreover, every evaluation and comparison represents only a snapshot in time and may depend on a context that includes parameters, training/testing splits, random seeds, or various pre- and post-processing steps, thereby making results not always reproducible and comparable. Furthermore, in many cases, only “positive” predictions are evaluated where new relations are predicted; however, some relations also turn out to be incorrect and are removed from a dataset; methods that determine whether relations are wrongly asserted are currently underrepresented.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+Biological knowledge evolves rapidly, and the corresponding data- and knowledge-bases are updated regularly to reflect new discoveries. This provides an opportunity for a time-based, empirical, and continuous evaluation of relation prediction methods in a wide area of domains. The Continuous Evaluation of Relational Learning in Biology (CERLIB) aims to collect and evaluate relation predictions in life sciences using an unbiased, empirical approach based on the growing body of biological knowledge.
 
-```markdown
-Syntax highlighted code block
+## Approach
 
-# Header 1
-## Header 2
-### Header 3
+We ask any individual or team to predict biological relations. All submissions will be time-stamped at submission time. Initial submissions made to CERLIB will not be “enrolled” in any challenge at submission time. We will continuously (at least monthly) update a set of relations with high confidence (usually reflecting experimental evidence) available from several biological knowledge bases. Each updated set of relations will obtain a timestamp. Any challenge submission which has been made before an update but is not yet enrolled will enroll in the challenge at the time the updated set of relations becomes available. Any submission made before the update time which was already enrolled will be evaluated with respect to the new set of relations becoming available. Evaluation will consist of comparing predictions to the set of relations that become available. Each relation type will be evaluated separately.
 
-- Bulleted
-- List
+For each challenge, we provide two types of information: a dataset usually in RDF, and a SPARQL query to an endpoint serving the evaluation data. The SPARQL query is used to retrieve the set of relations considered to be true at the timepoint at which the query is evaluated, and will be executed monthly to generate test data and update the evaluations.
 
-1. Numbered
-2. List
+## Subchallenges
 
-**Bold** and _Italic_ and `Code` text
+The aim of CERLIB is to evaluate methods for relation prediction in a broad sense. For this purpose, we define three subchallenges, differentiated by the types of data you can use to make your predictions:
+- Learning from graphs: you can use the graph (in RDF) provided by the challenge, but no other information.
+- Learning from text: you can use MEDLINE or PubMed Central full text articles for predicting relations, but no other information.
+- Free: any source can be used, such as combinations of graphs and text, and external data.
 
-[Link](url) and ![Image](src)
-```
+## Evaluation
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/bio-ontology-research-group/biochallenge/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+We use two types of evaluation metrics. The first applies to relations in which both the subject and object are considered without any semantics that may arise from specific axioms within the graph. For these, we compute recall at ranks (Hits@k), AUROC, AUPR, and mean reciprocal rank (MRR). We use a second type of evaluation metrics for relations between biological entities and classes in ontologies; the aim of the second set of metrics is to account for the semantics of relations to classes in ontologies (for example, if R(x,C) and SubClassOf(C,D), then a prediction of R(x,D) would be considered correct but less specific than R(x,C)). For this set of relations we use the evaluation metrics developed by CAFA, in particular F_max and S_min, which take class specificity into account.
