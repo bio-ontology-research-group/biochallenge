@@ -40,6 +40,11 @@ class Team(models.Model):
         User, related_name='created_teams', null=True, on_delete=models.SET_NULL)
     members = models.ManyToManyField(User, through='Member', related_name='teams')
 
+    def get_membership(self, user):
+        queryset = self.member_set.filter(user=user)
+        if queryset.exists():
+            return queryset.get()
+        return None
 
 class MemberManager(models.Manager):
     use_for_related_fields = True
@@ -47,14 +52,25 @@ class MemberManager(models.Manager):
     def add_member(self, user, team):
         self.create(user=user, team=team)
 
+    def add_admin_member(self, user, team):
+        self.create(user=user, team=team, is_admin=True)
+
     def remove_member(self, user, team):
         self.filter(user=user, team=team).delete()
 
 
 class Member(models.Model):
+    ACTIVE = 'active'
+    INVITED = 'invited'
+    STATUSES = ((ACTIVE, ACTIVE), (INVITED, INVITED))
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     is_admin = models.BooleanField(default=False)
     joined_date = models.DateTimeField(default=timezone.now)
+    status = models.CharField(max_length=15, default=INVITED)
     
     objects = MemberManager()
+
+    class Meta:
+        unique_together = [['user', 'team'],]

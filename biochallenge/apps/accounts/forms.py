@@ -4,6 +4,7 @@ from accounts.models import UserProfile
 from snowpenguin.django.recaptcha2.fields import ReCaptchaField
 from snowpenguin.django.recaptcha2.widgets import ReCaptchaWidget
 from allauth.account.forms import LoginForm, SignupForm
+from accounts.models import Team, Member
 
 
 class UserProfileForm(forms.ModelForm):
@@ -45,3 +46,22 @@ class CaptchaSignupForm(SignupForm):
 class CaptchaLoginForm(LoginForm):
     captcha = ReCaptchaField(widget=ReCaptchaWidget())
 
+
+class TeamForm(forms.ModelForm):
+
+    class Meta:
+        model = Team
+        fields = ['name', 'description', 'logo']
+
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(TeamForm, self).__init__(*args, **kwargs)
+        
+    def save(self):
+        self.instance = super(TeamForm, self).save(commit=False)
+        self.instance.created_user = self.request.user
+        self.instance.save()
+        Member.objects.add_admin_member(self.request.user, self.instance)
+        return self.instance
+        

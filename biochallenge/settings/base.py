@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'allauth.socialaccount.providers.orcid',
     'challenge',
     'widget_tweaks',
     'rest_framework',
@@ -170,6 +171,16 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_PRESERVE_USERNAME_CASING = "False"
+
+SOCIALACCOUNT_PROVIDERS = {
+    'orcid': {
+        # Base domain of the API. Default value: 'orcid.org', for the production API
+        'BASE_DOMAIN':'orcid.org',  # for the sandbox API
+        # Member API or Public API? Default: False (for the public API)
+        'MEMBER_API': False,  # for the member API
+    }
+}
+
 
 SITE_ID = 1
 SITE_DOMAIN = 'localhost:8000'
