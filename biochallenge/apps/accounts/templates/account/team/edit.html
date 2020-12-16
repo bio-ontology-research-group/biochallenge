@@ -25,11 +25,11 @@
   <table class="table table-striped">
     <thead><th>#</th><th>Name</th><th>Status</th></thead>
     <tbody>
-      {% for mem in object.members.all %}
+      {% for mem in object.member_set.all %}
       <tr>
         <td>{{ forloop.counter }}</td>
-        <td>{{ mem.get_full_name }}</td>
-        <td>{{ mem.get_status }}</td>
+        <td>{{ mem.user.get_full_name }}</td>
+        <td>{{ mem.status }}</td>
       </tr>
       {% endfor %}
     </tbody>
