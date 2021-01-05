@@ -47,8 +47,8 @@ OWLDataFactory dataFactory = manager.getOWLDataFactory()
 ConsoleProgressMonitor progressMonitor = new ConsoleProgressMonitor()
 OWLReasonerConfiguration config = new SimpleConfiguration(progressMonitor)
 ElkReasonerFactory reasonerFactory = new ElkReasonerFactory()
-OWLReasoner reasoner = reasonerFactory.createReasoner(ont, config)
-reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
+// OWLReasoner reasoner = reasonerFactory.createReasoner(ont, config)
+// reasoner.precomputeInferences(InferenceType.CLASS_HIERARCHY)
 def renderer = new ManchesterOWLSyntaxOWLObjectRendererImpl()
 def shortFormProvider = new SimpleShortFormProvider()
 
@@ -59,6 +59,11 @@ def ignoredWords = ["\\r\\n|\\r|\\n", "[()]"]
 
 
 ont.getTBoxAxioms().each { ax ->
+    println("---------------")
+    print(ax.getClass())
+    println(renderer.render(ax).getClass())
+    println("---------------")
+    
     out.println(renderer.render(ax));
 }
 

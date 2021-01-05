@@ -106,3 +106,8 @@ venv.bak/
 yarn.lock
 media/
 public/
+
+#### temporary ignores ####
+**/axioms.txt
+**/data.owl
+**/PheKnowLator_MergedOntologiesGeneID_Normalized_Cleaned.owl
