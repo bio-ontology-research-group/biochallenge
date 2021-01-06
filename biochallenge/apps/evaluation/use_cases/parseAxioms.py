@@ -11,10 +11,12 @@ from triplets import Triplet
 
 
 def main(in_file, out_file):
-    getRelationships(in_file, out_file)
+    triplets = read_file(in_file) 
+    relations = Triplet.extract_relationships(triplets)
+    print(relations)
+    Triplet.to_file(triplets, out_file)
 
-
-def getRelationships(in_file, out_file):
+def read_file(in_file):
 # To see which type of relationships are retrieved from the file take a look to doc in the Triplets class.
     file = open(in_file, 'r')
 
@@ -22,13 +24,20 @@ def getRelationships(in_file, out_file):
     for line in file:
         triplet = Triplet.create_valid_triplet(line)
         if triplet != None:
-            triplets.append(str(triplet))
+            triplets.append(triplet)
 
+    return triplets
 
-    with open(out_file, 'w') as f:
-        for triplet in triplets:
-            f.write(triplet+'\n')
+def read_triplets_file(in_file):
+# To see which type of relationships are retrieved from the file take a look to doc in the Triplets class.
+    file = open(in_file, 'r')
 
+    triplets = []
+    for line in file:
+        triplet = Triplet.read_triplet(line)
+        triplets.append(triplet)
+
+    return triplets
 
 
 if __name__ == '__main__':
