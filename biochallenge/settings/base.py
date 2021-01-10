@@ -221,8 +221,8 @@ FILE_UPLOAD_HANDLERS = [
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-RECAPTCHA_PRIVATE_KEY = '6LefajoUAAAAAEiswDUvk1quNKpTJCg49gwrLXpb'
-RECAPTCHA_PUBLIC_KEY = '6LefajoUAAAAAOAWkZnaz-M2lgJOIR9OF5sylXmm'
+RECAPTCHA_PRIVATE_KEY = '6LcdbicaAAAAAGeVnvEKHNdDXxWGupkz58emiA8S'
+RECAPTCHA_PUBLIC_KEY = '6LcdbicaAAAAAPrNL86tPg8Y2sXj-fRwspUyxc7-'
 ACCOUNT_FORMS = {
     'login': 'accounts.forms.CaptchaLoginForm',
     'signup': 'accounts.forms.CaptchaSignupForm'}

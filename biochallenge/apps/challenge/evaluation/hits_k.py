@@ -1,22 +1,22 @@
 import click as ck
-from parseAxioms import read_file, read_triplets_file
+from challenge.evaluation.parseAxioms import read_file, read_triplets_file
 from scipy.stats import rankdata
-from triplets import Triplet
+from challenge.evaluation.triplets import Triplet
 
-@ck.command()
-@ck.option(
-    '--gt-file',    '-gt',      default='example_gt.tsv',
-    help = "Input file containing the new ground-truth relationships")
-@ck.option(
-    '--pred-file',  '-pred',    default='example_pred.tsv',
-    help = "Input file containing the predcited relationships" )
-@ck.option(
-    '--k',          '-k',       default=10,
-    help = "Value k of hits@k")
+# @ck.command()
+# @ck.option(
+#     '--gt-file',    '-gt',      default='example_gt.tsv',
+#     help = "Input file containing the new ground-truth relationships")
+# @ck.option(
+#     '--pred-file',  '-pred',    default='example_pred.tsv',
+#     help = "Input file containing the predcited relationships" )
+# @ck.option(
+#     '--k',          '-k',       default=10,
+#     help = "Value k of hits@k")
 
 
 
-def main(gt_file, pred_file, k):
+def compute_hits_10(gt_file, pred_file, k):
 
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
@@ -49,6 +49,7 @@ def main(gt_file, pred_file, k):
     result = hits/len(triplets_gt)
 
     print(result)
+    return result
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,5 @@
 import click as ck
-from triplets import Triplet
+from challenge.evaluation.triplets import Triplet
 
 @ck.command()
 @ck.option(

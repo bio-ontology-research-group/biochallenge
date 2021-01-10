@@ -6,7 +6,7 @@ from django.conf import settings
 import os
 import json
 import datetime
-
+from challenge.evaluation.hits_k import compute_hits_10
 
 class Challenge(models.Model):
     DRAFT = 'draft'
@@ -104,3 +104,16 @@ class Submission(models.Model):
     date = models.DateTimeField(default=timezone.now)
     predictions_file = models.FileField(upload_to=submission_dir_path)
     status = models.CharField(max_length=31, default=EVALUATION)
+    hits_10 = models.FloatField(null=True)
+
+
+def evaluate_submission(sender, instance, **kwargs):
+    
+    filename = instance.predictions_file
+    ground_truth_file = 'challenge/evaluation/example_gt.tsv'
+
+    hits_10 = compute_hits_10(ground_truth_file, filename, 10)
+    instance.hits_10 = hits_10
+    instance.save()
+
+post_save.connect(evaluate_submission, sender = Submission)
