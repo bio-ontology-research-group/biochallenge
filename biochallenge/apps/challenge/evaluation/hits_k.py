@@ -2,6 +2,8 @@ import click as ck
 from challenge.evaluation.parseAxioms import read_file, read_triplets_file
 from scipy.stats import rankdata
 from challenge.evaluation.triplets import Triplet
+from time import sleep
+from celery import shared_task
 
 # @ck.command()
 # @ck.option(
@@ -15,9 +17,10 @@ from challenge.evaluation.triplets import Triplet
 #     help = "Value k of hits@k")
 
 
-
+@shared_task
 def compute_hits_10(gt_file, pred_file, k):
 
+    sleep(20)
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
@@ -41,7 +44,7 @@ def compute_hits_10(gt_file, pred_file, k):
         for i in range(len(preds)):
             
             pred = preds[i]
-            print(pred, ranking[i])
+         #   print(pred, ranking[i])
             if pred in gt and ranking[i] <= k:
                 hits+=1
         

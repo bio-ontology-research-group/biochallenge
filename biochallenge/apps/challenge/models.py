@@ -108,9 +108,9 @@ class Submission(models.Model):
 
 
 def evaluate_submission(sender, instance, **kwargs):
-    
-    filename = instance.predictions_file
-    ground_truth_file = 'challenge/evaluation/example_gt.tsv'
+    post_save.disconnect(evaluate_submission, sender = Submission)
+    filename = instance.predictions_file.path
+    ground_truth_file = os.getcwd() + '/biochallenge/apps/challenge/evaluation/example_gt.tsv'
 
     hits_10 = compute_hits_10(ground_truth_file, filename, 10)
     instance.hits_10 = hits_10
