@@ -111,9 +111,8 @@ def evaluate_submission(sender, instance, **kwargs):
     post_save.disconnect(evaluate_submission, sender = Submission)
     filename = instance.predictions_file.path
     ground_truth_file = os.getcwd() + '/biochallenge/apps/challenge/evaluation/example_gt.tsv'
-
-    hits_10 = compute_hits_10(ground_truth_file, filename, 10)
-    instance.hits_10 = hits_10
-    instance.save()
+    compute_hits_10.delay(instance.id, ground_truth_file, filename, 10).get()
+    # instance.hits_10 = hits_10_job.get()
+    # instance.save()
 
 post_save.connect(evaluate_submission, sender = Submission)
