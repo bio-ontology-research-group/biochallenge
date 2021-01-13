@@ -4,7 +4,7 @@ from scipy.stats import rankdata
 from challenge.evaluation.triplets import Triplet
 from time import sleep
 from celery import shared_task, Celery
-from challenge.models import Submission
+from django.apps import apps
 # @ck.command()
 # @ck.option(
 #     '--gt-file',    '-gt',      default='example_gt.tsv',
@@ -52,7 +52,7 @@ def compute_hits_10(submission_id, gt_file, pred_file, k):
         
     
     result = hits/len(triplets_gt)
-
+    Submission = apps.get_model('challenge', 'Submission')
     submission = Submission.objects.get(pk=submission_id)
     submission.hits_10 = result
     submission.save()

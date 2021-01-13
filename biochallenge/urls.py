@@ -27,5 +27,6 @@ urlpatterns = [
     path('manage/', include('biochallenge.manage_urls')),
     path('api/', include('biochallenge.api_urls')),
     path('about/', TemplateView.as_view(template_name='about.html'), name='about'),
+    path('contacts/', TemplateView.as_view(template_name='contacts.html'), name='contacts'),
     path('healthcheck', TemplateView.as_view(template_name='health.html')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

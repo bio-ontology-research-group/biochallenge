@@ -3,7 +3,7 @@
 <nav class="navbar navbar-expand-lg bg-secondary text-uppercase
 	    fixed-top navbar-shrink" id="mainNav">
   <div class="container">
-    <a class="navbar-brand js-scroll-trigger" href="#page-top">Bio Challenge</a>
+    <a class="navbar-brand js-scroll-trigger" href="{% url "home" %}">Bio Challenge</a>
     <div class="collapse navbar-collapse" id="navbarResponsive">
       <ul class="navbar-nav ml-auto">
         <li class="nav-item mx-0 mx-lg-1">
@@ -14,7 +14,7 @@
         </li>
         <li class="nav-item mx-0 mx-lg-1">
           <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
-	     target="_blank"href="https://borg.kaust.edu.sa/Pages/People.aspx?t=Current">Contact</a>
+	     href="{% url "contacts" %}">Contacts</a>
         </li>
 	<li>
 	{% if user.is_authenticated %}
