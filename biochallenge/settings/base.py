@@ -235,3 +235,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'list-group-item-warning',
     messages.ERROR: 'list-group-item-danger',
 }
+
+CSRF_COOKIE_HTTPONLY = True
