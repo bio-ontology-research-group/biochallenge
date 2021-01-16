@@ -3,8 +3,8 @@ from challenge.evaluation.parseAxioms import read_file, read_triplets_file
 from scipy.stats import rankdata
 from challenge.evaluation.triplets import Triplet
 from time import sleep
-from celery import shared_task
-
+from celery import shared_task, Celery
+from django.apps import apps
 # @ck.command()
 # @ck.option(
 #     '--gt-file',    '-gt',      default='example_gt.tsv',
@@ -17,10 +17,10 @@ from celery import shared_task
 #     help = "Value k of hits@k")
 
 
-@shared_task
+@shared_task(name="challenge.evaluation.hits_k.compute_hits_10" , ignore_result= False)
 def compute_hits_10(gt_file, pred_file, k):
 
-    sleep(20)
+    sleep(60)
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
@@ -50,9 +50,8 @@ def compute_hits_10(gt_file, pred_file, k):
         
     
     result = hits/len(triplets_gt)
-
-    print(result)
     return result
+    #print("RESULTS: ", "WHAAAA" , result)
 
 if __name__ == "__main__":
     main()

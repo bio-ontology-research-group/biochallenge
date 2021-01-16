@@ -6,7 +6,13 @@ from django.conf import settings
 import os
 import json
 import datetime
-from challenge.evaluation.hits_k import compute_hits_10
+from time import sleep
+from celery import shared_task
+from challenge.evaluation.parseAxioms import read_triplets_file
+from challenge.evaluation.triplets import Triplet
+from scipy.stats import rankdata
+
+
 
 class Challenge(models.Model):
     DRAFT = 'draft'
@@ -111,9 +117,52 @@ def evaluate_submission(sender, instance, **kwargs):
     post_save.disconnect(evaluate_submission, sender = Submission)
     filename = instance.predictions_file.path
     ground_truth_file = os.getcwd() + '/biochallenge/apps/challenge/evaluation/example_gt.tsv'
-
-    hits_10 = compute_hits_10(ground_truth_file, filename, 10)
-    instance.hits_10 = hits_10
-    instance.save()
+    
+    compute_hits_10.delay(instance.id, ground_truth_file, filename, 10)
+    #result = compute_hits_10.delay(ground_truth_file, filename, 10)
+    #print(result.status, result.backend, result.get())
+    #instance.hits_10 = result.get()
+    #instance.save()
 
 post_save.connect(evaluate_submission, sender = Submission)
+
+
+@shared_task
+def compute_hits_10(sumbission_id, gt_file, pred_file, k):
+
+    sleep(60)
+    triplets_gt   = read_triplets_file(gt_file)
+    triplets_pred = read_triplets_file(pred_file)
+
+    rels = set([t.relation for t in triplets_gt] + [t.relation for t in triplets_pred])
+
+    grouped_gt_rels   = Triplet.groupBy_relation(triplets_gt)       # {rel1: [triplets with rel1], rel2: [triplets with rel2], ...}
+    grouped_pred_rels = Triplet.groupBy_relation(triplets_pred)
+
+
+    hits = 0
+    for rel in rels:
+        if rel in grouped_gt_rels:
+            gt = grouped_gt_rels[rel]
+        else:
+            gt = []
+        preds = grouped_pred_rels[rel]
+
+        scores = [x.score for x in preds]
+        ranking = rankdata(scores, method='average')
+
+        for i in range(len(preds)):
+            
+            pred = preds[i]
+         #   print(pred, ranking[i])
+            if pred in gt and ranking[i] <= k:
+                hits+=1
+        
+    result = hits/len(triplets_gt)
+    
+    submission = Submission.objects.get(pk=sumbission_id)
+    submission.hits_10 = result
+    submission.save()
+
+    
+    #return result

@@ -208,6 +208,8 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_PUBLISH_RETRY = True
 CELERY_WORKER_DISABLE_RATE_LIMITS = False
 
+CELERY_IMPORTS = ("challenge.evaluation.hits_k", )
+
 # By default we will ignore result
 # If you want to see results and try out tasks interactively, change it to False
 # Or change this setting on tasks level
@@ -235,3 +237,5 @@ MESSAGE_TAGS = {
     messages.WARNING: 'list-group-item-warning',
     messages.ERROR: 'list-group-item-danger',
 }
+
+CSRF_COOKIE_HTTPONLY = True
