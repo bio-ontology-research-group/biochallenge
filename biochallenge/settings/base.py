@@ -208,12 +208,11 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_PUBLISH_RETRY = True
 CELERY_WORKER_DISABLE_RATE_LIMITS = False
 
-CELERY_IMPORTS = ("challenge.evaluation.hits_k", )
 
 # By default we will ignore result
 # If you want to see results and try out tasks interactively, change it to False
 # Or change this setting on tasks level
-CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_IGNORE_RESULT = False
 CELERY_RESULT_EXPIRES = 600
 
 FILE_UPLOAD_HANDLERS = [
@@ -223,8 +222,8 @@ FILE_UPLOAD_HANDLERS = [
 
 FILE_UPLOAD_PERMISSIONS = 0o644
 
-RECAPTCHA_PRIVATE_KEY = '6LeI5CcaAAAAAHSPuNfECHN-DKz9gUoPV_v9DzuLc'
-RECAPTCHA_PUBLIC_KEY = '6LeI5CcaAAAAAAmLOn-wORzlR7jR8FZohpAZyuBG'
+RECAPTCHA_PRIVATE_KEY = '6LcdbicaAAAAAGeVnvEKHNdDXxWGupkz58emiA8S'
+RECAPTCHA_PUBLIC_KEY = '6LcdbicaAAAAAPrNL86tPg8Y2sXj-fRwspUyxc7-'
 
 ACCOUNT_FORMS = {
     'login': 'accounts.forms.CaptchaLoginForm',

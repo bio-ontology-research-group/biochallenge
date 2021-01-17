@@ -5,7 +5,13 @@ from django.utils import timezone
 import requests
 import datetime
 import os
+from django.apps import apps
 
+from time import sleep
+from scipy.stats import rankdata
+
+from challenge.evaluation.parseAxioms import read_triplets_file
+from challenge.evaluation.triplets import Triplet
 
 def get_release_version(endpoint):
     try:
@@ -54,3 +60,45 @@ def load_release(challenge_id):
         challenge.status = challenge.UPDATE_FAILED
     challenge.save()
         
+
+
+@shared_task
+def compute_hits_k(submission_id, gt_file, pred_file, k):
+
+    #sleep(60)
+    triplets_gt   = read_triplets_file(gt_file)
+    triplets_pred = read_triplets_file(pred_file)
+
+    rels = set([t.relation for t in triplets_gt] + [t.relation for t in triplets_pred])
+
+    grouped_gt_rels   = Triplet.groupBy_relation(triplets_gt)       # {rel1: [triplets with rel1], rel2: [triplets with rel2], ...}
+    grouped_pred_rels = Triplet.groupBy_relation(triplets_pred)
+
+
+    hits = 0
+    for rel in rels:
+        if rel in grouped_gt_rels:
+            gt = grouped_gt_rels[rel]
+        else:
+            gt = []
+        preds = grouped_pred_rels[rel]
+
+        scores = [x.score for x in preds]
+        ranking = rankdata(scores, method='average')
+
+        for i in range(len(preds)):
+            
+            pred = preds[i]
+         #   print(pred, ranking[i])
+            if pred in gt and ranking[i] <= k:
+                hits+=1
+        
+    
+    result = hits/len(triplets_gt)
+
+    Submission = apps.get_model('challenge', 'Submission')
+    submission = Submission.objects.get(pk=submission_id)
+    submission.hits_10 = result
+    submission.save()
+
+    return result
