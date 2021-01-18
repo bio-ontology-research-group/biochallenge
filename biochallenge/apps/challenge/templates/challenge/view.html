@@ -5,9 +5,9 @@
   <div class="row">
     <div class="col-12">
       <a
-	href="{% url "challenge_submit" object.release.pk %}"
-	class="btn btn-primary btn-lg float-right">
-	Submit
+        href="{% url "challenge_submit" object.release.pk %}"
+        class="btn btn-primary btn-lg float-right">
+        Submit
       </a>
     </div>
     <div class="col-6">
@@ -15,11 +15,18 @@
       <img class="img-fluid" src="{{ object.image.url }}"/>
       <p>{{ object.description }}</p>
       <a class="btn btn-primary btn-lg" href="{{ object.release.get_data_url }}">Download</a>
+      <a class="btn btn-primary btn-lg" href="{% url "challenge_submissions" object.release.pk %}">Ranking</a>
     </div>
     <div class="col-6">
       <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
       <pre><code>{{ object.sparql_query }}</code></pre>
     </div>
   </div>
+
+
+  
+
+
+
 </div>
 {% endblock %}
