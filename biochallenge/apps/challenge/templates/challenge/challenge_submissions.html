@@ -5,21 +5,34 @@
 <div class="container">
   <div class="row">
     <h2>Submissions</h2>
-    <table class="table table-striped">
-      <thead><th>#</th><th>Challenge</th><th>Release</th><th>User</th><th>Score</th></thead>
+    <table id=subs class="table table-striped dataTable">
+        <thead>
+          <th>#</th>
+          <th>Release</th>
+          <th>User</th>
+          <th class="sorting_desc" >Hits@10</th>
+        </thead>
       <tbody>
-	{% for sub in object_list %}
-	<tr>
-        <td></td>        
-        <td> {{ sub.release.challenge.name }} </td>
-        <td> {{ sub.release.version }} </td>
-        <td> {{ sub.user }} </td>      
-        <td> {{ sub.hits_10 }} </td>
-	</tr>
-	{% endfor %}
+        {% for sub in object_list %}
+        <tr>
+            <td> {{ forloop.counter }} </td>
+            <td> {{ sub.release.version }} </td>
+            <td> {{ sub.user }} </td>      
+            <td> {{ sub.hits_10 }} </td>
+        </tr>
+        {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+    $('#subs').DataTable( {
+        "order": [[ 3, "desc" ]]
+    } );
+} );
+</script>
 {% endblock %}
+

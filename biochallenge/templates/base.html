@@ -21,6 +21,9 @@
     <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template -->
     <link href="{% static "css/app.css" %}" rel="stylesheet">
+    <link href="{% static "css/jquery.dataTables.min.css" %}" rel="stylesheet">
+
+    
 
     <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -95,6 +98,16 @@
     <script src="{% static "yarn/popper.js/dist/umd/popper.min.js" %}"></script>
     <script src="{% static "yarn/bootstrap/dist/js/bootstrap.min.js" %}"></script>
     <script src="{% static "js/app.js" %}"></script>
+    <script src="{% static "js/jquery.dataTables.min.js" %}"></script>
+    <script src="{% static "js/jquery-3.5.1.js" %}"></script>
+
+    <script>
+      $(document).ready(function() {
+      $('#subs').DataTable( {
+          "order": [[ 3, "desc" ]]
+      } );
+    } );
+    </script>
 
     {% block scripts %}
     {% endblock %}
