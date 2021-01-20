@@ -1,6 +1,6 @@
 from celery import shared_task
 from subprocess import Popen, PIPE
-from challenge.models import Challenge, Release
+from challenge.models import Challenge, Release, Submission
 from django.utils import timezone
 import requests
 import datetime
@@ -76,6 +76,7 @@ def compute_hits_k(submission_id, gt_file, pred_file, k):
 
 
     hits = 0
+    ranks = {}
     for rel in rels:
         if rel in grouped_gt_rels:
             gt = grouped_gt_rels[rel]
@@ -83,20 +84,26 @@ def compute_hits_k(submission_id, gt_file, pred_file, k):
             gt = []
         preds = grouped_pred_rels[rel]
 
-        scores = [x.score for x in preds]
+        scores = [x.score for x in preds]   
         ranking = rankdata(scores, method='average')
 
         for i in range(len(preds)):
-            
+            rank = ranking[i]            
             pred = preds[i]
          #   print(pred, ranking[i])
-            if pred in gt and ranking[i] <= k:
+            if pred in gt and rank <= k:
                 hits+=1
         
-    
+            if rank not in ranks:
+                ranks[rank] = 0
+            ranks[rank] += 1
+
+
     result = hits/len(triplets_gt)
 
-    Submission = apps.get_model('challenge', 'Submission')
+    rank_auc = compute_rank_roc(ranks,1)
+
+    
     submission = Submission.objects.get(pk=submission_id)
     submission.hits_10 = result
     submission.save()

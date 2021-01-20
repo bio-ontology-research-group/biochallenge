@@ -110,3 +110,4 @@ class Submission(models.Model):
     predictions_file = models.FileField(upload_to=submission_dir_path)
     status = models.CharField(max_length=31, default=EVALUATION)
     hits_10 = models.FloatField(null=True)
+    
