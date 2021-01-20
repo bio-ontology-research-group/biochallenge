@@ -11,6 +11,7 @@ from celery import shared_task
 from challenge.evaluation.parseAxioms import read_triplets_file
 from challenge.evaluation.triplets import Triplet
 from scipy.stats import rankdata
+from accounts.models import Team
 
 
 class Challenge(models.Model):
@@ -101,8 +102,9 @@ class Submission(models.Model):
         (WITHDRAWN, WITHDRAWN),
         (ERROR, ERROR))
     
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='submissions')
+    team = models.ForeignKey(
+        Team, on_delete=models.SET_NULL, null=True,
+        related_name='submissions')
     release = models.ForeignKey(
         Release, on_delete=models.SET_NULL, null=True,
         related_name='submissions')
