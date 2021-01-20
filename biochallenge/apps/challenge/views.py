@@ -75,4 +75,4 @@ class SubmissionListView(views.ListView):
     def get_queryset(self, *args, **kwargs):
         queryset = super(SubmissionListView, self).get_queryset(
             *args, **kwargs)
-        return queryset.filter(user=self.request.user)
+        return queryset.filter(team__members=self.request.user)
