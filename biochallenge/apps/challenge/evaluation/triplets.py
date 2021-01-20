@@ -6,7 +6,7 @@ class Triplet():
         self.__entity_1 = entity_1
         self.__relation = relation
         self.__entity_2 = entity_2
-        self.__score    = score # for developing purposes
+        self.__score    = float(score) # for developing purposes
 
     def __str__(self):
         return '\t'.join((self.__entity_1, self.__relation, self.__entity_2, str(self.__score)))
