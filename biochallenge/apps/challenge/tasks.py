@@ -9,7 +9,7 @@ from django.apps import apps
 
 from time import sleep
 from scipy.stats import rankdata
-
+import numpy as np
 from challenge.evaluation.parseAxioms import read_triplets_file
 from challenge.evaluation.triplets import Triplet
 
@@ -62,50 +62,72 @@ def load_release(challenge_id):
         
 
 
+
+def compute_rank_roc(ranks, n_entities):
+
+    auc_x = list(ranks.keys())
+    auc_x.sort()
+    auc_y = []
+    tpr = 0
+    sum_rank = sum(ranks.values())
+    for x in auc_x:
+        tpr += ranks[x]
+        auc_y.append(tpr / sum_rank)
+    auc_x.append(n_entities)
+    auc_y.append(1)
+    auc = np.trapz(auc_y, auc_x) 
+    return auc/n_entities
+
 @shared_task
-def compute_hits_k(submission_id, gt_file, pred_file, k):
+def compute_metrics(submission_id, gt_file, pred_file, k):
+
+    #Computes hits@k and AUC
+
 
     #sleep(60)
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
-    rels = set([t.relation for t in triplets_gt] + [t.relation for t in triplets_pred])
+    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt])
 
-    grouped_gt_rels   = Triplet.groupBy_relation(triplets_gt)       # {rel1: [triplets with rel1], rel2: [triplets with rel2], ...}
-    grouped_pred_rels = Triplet.groupBy_relation(triplets_pred)
+    grouped_gt   = Triplet.groupBy_entity_relation(triplets_gt)       # {rel1: [triplets with rel1], rel2: [triplets with rel2], ...}
+    grouped_pred = Triplet.groupBy_entity_relation(triplets_pred)
 
+    
+    keys = set(list(grouped_gt.keys()) + list(grouped_pred.keys()))
 
     hits = 0
     ranks = {}
-    for rel in rels:
-        if rel in grouped_gt_rels:
-            gt = grouped_gt_rels[rel]
+    for key in keys:
+        if key in grouped_gt:
+            gt = grouped_gt[key]
         else:
             gt = []
-        preds = grouped_pred_rels[rel]
+        preds = grouped_pred[key]
 
-        scores = [x.score for x in preds]   
+        scores = [-x.score for x in preds]   
         ranking = rankdata(scores, method='average')
 
-        for i in range(len(preds)):
+        for i in range(len(ranking)):
             rank = ranking[i]            
             pred = preds[i]
-         #   print(pred, ranking[i])
+        
             if pred in gt and rank <= k:
                 hits+=1
         
-            if rank not in ranks:
+            if not rank in ranks:
                 ranks[rank] = 0
             ranks[rank] += 1
 
 
-    result = hits/len(triplets_gt)
+    result = hits/len(triplets_pred)
 
-    rank_auc = compute_rank_roc(ranks,1)
+    rank_auc = compute_rank_roc(ranks,len(entities))
 
     
     submission = Submission.objects.get(pk=submission_id)
     submission.hits_10 = result
+    submission.auc = rank_auc
     submission.save()
 
     return result

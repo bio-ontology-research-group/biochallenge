@@ -89,7 +89,7 @@ post_save.connect(create_release_files, sender=Release)
 
 
 def submission_dir_path(instance, filename):
-    return f'submissions/{instance.user.id:06d}/{instance.release.id:06d}/{filename}'
+    return f'submissions/{instance.team.id:06d}/{instance.release.id:06d}/{filename}'
 
 class Submission(models.Model):
     EVALUATION = 'evaluation'
@@ -112,4 +112,5 @@ class Submission(models.Model):
     predictions_file = models.FileField(upload_to=submission_dir_path)
     status = models.CharField(max_length=31, default=EVALUATION)
     hits_10 = models.FloatField(null=True)
+    auc = models.FloatField(null=True)
     

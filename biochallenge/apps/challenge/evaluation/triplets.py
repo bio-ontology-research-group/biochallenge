@@ -8,7 +8,7 @@ class Triplet():
         self.__entity_2 = entity_2
         self.__score    = float(score) # for developing purposes
 
-    def __str__(self):
+    def __repr__(self):
         return '\t'.join((self.__entity_1, self.__relation, self.__entity_2, str(self.__score)))
 
     def __eq__(self, other):
@@ -70,6 +70,27 @@ class Triplet():
             else:
                 dict[rel].append(triplet)
         return dict
+
+
+    @classmethod
+    def groupBy_entity_relation(cls, triplets):
+        """
+        Given a list of triplets [(s_1,r_1,t_2),...,(s_n,r_n,t_n)], the function groups the triplets by checking equality on s_l and r_l. The result has the following form:
+
+        [[s_1,r_1,t_i],...,[s_1,r_k,t_i],...,[s_j,r_1,t_i],...,[s_j,r_k,t_i]]. j is the number of source nodes. k is the number of relations and i is a value from 1 to the number of target nodes.
+        """
+        dict = {}
+
+        for triplet in triplets:
+            entity_1 = triplet.entity_1
+            rel = triplet.relation
+
+            if not (entity_1, rel) in dict:
+                dict[(entity_1, rel)] = [triplet]
+            else:
+                dict[(entity_1, rel)].append(triplet)
+        return dict
+
 
     @classmethod
     def to_file(cls, triplets, out_file):
