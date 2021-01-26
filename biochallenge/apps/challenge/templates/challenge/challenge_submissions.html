@@ -8,20 +8,24 @@
  
   </div>
 
-  <table id="subs" class="table-striped dataTable" style="width: 100%">
+  <table id="subs" class="table-striped dataTable">
     <thead>
       <th class="no-sort">#</th>
       <th class="no-sort">Release</th>
       <th class="no-sort">User</th>
       <th class="sorting" >Hits@10</th>
+      <th class="sorting" >AUC</th>
+
     </thead>
     <tbody>
       {% for sub in object_list %}
       <tr>
           <td> {{ forloop.counter }} </td>
           <td> {{ sub.release.version }} </td>
-          <td> {{ sub.user }} </td>      
+          <td> {{ sub.team }} </td>      
           <td> {{ sub.hits_10 }} </td>
+          <td> {{ sub.auc }} </td>
+
       </tr>
       {% endfor %}
     </tbody>
