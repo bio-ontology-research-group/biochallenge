@@ -33,6 +33,7 @@ class Challenge(models.Model):
     name = models.CharField(max_length=127)
     status = models.CharField(max_length=15, choices=STATUSES)
     description = models.TextField()
+    download_link = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to='challenges/', null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     modified_date = models.DateTimeField(default=timezone.now)
