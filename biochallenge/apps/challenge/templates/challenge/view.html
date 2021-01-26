@@ -14,7 +14,7 @@
       <h2>{{ object.name }}</h2>
       <img class="img-fluid" src="{{ object.image.url }}"/>
       <p>{{ object.description }}</p>
-      <a class="btn btn-primary btn-lg" href="{{ object.release.get_data_url }}">Download</a>
+      <a class="btn btn-primary btn-lg" href="{{ object.download_link }}">Download</a>
       <a class="btn btn-primary btn-lg" href="{% url "challenge_submissions" object.release.pk %}">Ranking</a>
     </div>
     <div class="col-6">

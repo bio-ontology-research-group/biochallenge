@@ -11,8 +11,8 @@ urlpatterns = [
          views.ChallengeDetailView.as_view(), name='challenge_view'),
     path('submissions', login_required(
         views.SubmissionListView.as_view()), name='submissions'),
-    path('challenge_submissions/<int:release_pk>', login_required(
-        views.ChallengeSubmissionListView.as_view()), name='challenge_submissions'),
+    path('challenge_submissions/<int:release_pk>', 
+        views.ChallengeSubmissionListView.as_view(), name='challenge_submissions'),
     path('submit/<int:release_pk>', login_required(
         views.SubmissionCreateView.as_view()), name='challenge_submit'),
 ]

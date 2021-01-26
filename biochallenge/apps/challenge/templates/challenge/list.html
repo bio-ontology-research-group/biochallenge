@@ -17,6 +17,7 @@
 	  <img class="img-fluid" src="{{ challenge.image.url }}" alt="">
 	</div>
 	</a>
+        <a class="btn btn-primary" href="{% url "challenge_submissions" challenge.get_latest_release.pk %}">Rankings</a>
       </div>
     {% endfor %}
   </div>

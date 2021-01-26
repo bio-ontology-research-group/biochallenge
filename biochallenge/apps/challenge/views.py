@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.views import generic as views
 from django.contrib.auth.models import User
 from challenge.models import (
-    Challenge, Submission)
+    Challenge, Submission, Release)
 from challenge.forms import (
     SubmissionForm)
 from challenge.mixins import ReleaseMixin
@@ -32,6 +32,13 @@ class ChallengeSubmissionListView(views.ListView):
         queryset = super(ChallengeSubmissionListView, self).get_queryset(
             *args, **kwargs)
         return queryset.filter(release= self.kwargs.get('release_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChallengeSubmissionListView, self).get_context_data(*args, **kwargs)
+        release = Release.objects.get(pk=self.kwargs.get('release_pk'))
+        context['release'] = release
+        return context
+        
 
 # class ChallengeDetailView2(views.DetailView):
 #     #model = Submission
