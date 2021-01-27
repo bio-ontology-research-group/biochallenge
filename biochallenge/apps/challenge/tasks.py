@@ -12,6 +12,7 @@ from scipy.stats import rankdata
 import numpy as np
 from challenge.evaluation.parseAxioms import read_triplets_file
 from challenge.evaluation.triplets import Triplet
+import json
 
 def get_release_version(endpoint):
     try:
