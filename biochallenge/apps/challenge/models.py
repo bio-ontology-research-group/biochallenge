@@ -64,7 +64,7 @@ class Release(models.Model):
         rel_dir = os.path.join(
             settings.MEDIA_ROOT,
             f'{self.challenge.id:06d}',
-            f'{self.id:06d}')
+            f'{self.version}')
         return rel_dir
 
     def get_config_file(self):
