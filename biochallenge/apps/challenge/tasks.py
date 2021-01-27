@@ -43,11 +43,7 @@ def load_release(challenge_id):
         sparql_query=challenge.sparql_query,
         date=date,
         version=version)
-    release.save()
 
-    challenge.status = challenge.UPDATING
-    challenge.save()
-    
     # Load release data
     env = dict(os.environ)
     env['JAVA_OPTS'] = '-Xms1g -Xmx32g'
@@ -55,11 +51,7 @@ def load_release(challenge_id):
                '-j', release.get_config_file(),], env=env)
     
     if p.wait() == 0:
-        challenge.status = challenge.ACTIVE
-    else:
-        challenge.status = challenge.UPDATE_FAILED
-    challenge.save()
-        
+        release.save()    
 
 
 
