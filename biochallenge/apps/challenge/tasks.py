@@ -13,6 +13,10 @@ import numpy as np
 from challenge.evaluation.parseAxioms import read_triplets_file
 from challenge.evaluation.triplets import Triplet
 import json
+import requests
+import gzip
+from urllib import parse
+
 
 def get_release_version(endpoint):
     try:
@@ -26,17 +30,15 @@ def get_release_version(endpoint):
     return f'{date.year}_{date.month:02d}'
 
 
-def create_release_files(release):
-    os.makedirs(release.get_dir(), exist_ok=True)
-    config_file = release.get_config_file()
-    with open(config_file, 'w') as f:
-        data = {
-            'endpoint': release.sparql_endpoint,
-            'query': release.sparql_query,
-            'dir': release.get_dir()}
-        data_json = json.dumps(data)
-        f.write(data_json)
-
+def execute_sparql(endpoint, query, format):
+    query_url="{endpoint}?query={query}&format={format}&timeout=0" \
+                .format(
+                    endpoint=endpoint, 
+                    query=parse.quote(query), 
+                    format=parse.quote(format), 
+                    )
+    response = requests.get(query_url, stream=True)
+    return response
         
 @shared_task
 def load_release(challenge_id):
@@ -58,16 +60,14 @@ def load_release(challenge_id):
         date=date,
         version=version)
 
-    create_release_files(release)
-
-    # Load release data
-    env = dict(os.environ)
-    env['JAVA_OPTS'] = '-Xms1g -Xmx32g'
-    p = Popen(['groovy', challenge.script, '-c', release.get_dir(),
-               '-j', release.get_config_file(),], env=env)
-    
-    if p.wait() == 0:
-        release.save()    
+    os.makedirs(release.get_dir(), exist_ok=True)
+    res = execute_sparql(release.sparql_endpoint, release.sparql_query, 'csv')
+    data_file = os.path.join(release.get_dir(), 'data.csv.gz')
+    with gzip.open(data_file, 'wb') as f:
+        res.raise_for_status()
+        for chunk in res.iter_content(chunk_size=65536):
+            f.write(chunk)
+    release.save()    
 
 
 
