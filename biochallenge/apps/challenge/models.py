@@ -74,21 +74,6 @@ class Release(models.Model):
         return '/' + os.path.join(self.get_dir(), 'data.tsv.gz')
 
 
-def create_release_files(sender, instance, created, **kwargs):
-    os.makedirs(instance.get_dir(), exist_ok=True)
-    config_file = instance.get_config_file()
-    f = open(config_file, 'w')
-    data = {
-        'endpoint': instance.sparql_endpoint,
-        'query': instance.sparql_query,
-        'dir': instance.get_dir()}
-    data_json = json.dumps(data)
-    f.write(data_json)
-    f.close()
-
-post_save.connect(create_release_files, sender=Release)
-
-
 def submission_dir_path(instance, filename):
     return f'submissions/{instance.team.id:06d}/{instance.release.id:06d}/{filename}'
 

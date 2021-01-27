@@ -23,6 +23,19 @@ def get_release_version(endpoint):
         print(e)
     date = timezone.now()
     return f'{date.year}_{date.month:02d}'
+
+
+def create_release_files(release):
+    os.makedirs(release.get_dir(), exist_ok=True)
+    config_file = release.get_config_file()
+    with open(config_file, 'w') as f:
+        data = {
+            'endpoint': release.sparql_endpoint,
+            'query': release.sparql_query,
+            'dir': release.get_dir()}
+        data_json = json.dumps(data)
+        f.write(data_json)
+
         
 @shared_task
 def load_release(challenge_id):
@@ -43,6 +56,8 @@ def load_release(challenge_id):
         sparql_query=challenge.sparql_query,
         date=date,
         version=version)
+
+    create_release_files(release)
 
     # Load release data
     env = dict(os.environ)
