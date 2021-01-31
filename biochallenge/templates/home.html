@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static from staticfiles %}
+{% load static %}
 
 {% block content %}
 <section class="page-section">
@@ -19,16 +19,14 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          The analysis of biological networks has long been a central
-          component of computational biology. These networks represent
-          biological entities and their interactions. Knowledge graphs
+          The prediction of relations between biological entities has long been a central
+          component of computational biology. Knowledge graphs
           in biology can be used to represent biological networks and
           also to represent propositions believed to be true within a
           domain. Networks and knowledge graph form a crucial
           component of life science infrastructure where hundreds of
           data- and knowledge-bases have been developed that make
           their information available in a graph-based form.
-
         </p>
       </div>
     </div>
@@ -53,7 +51,7 @@
           parameters, training/testing splits, random seeds, or
           various pre- and post-processing steps, thereby making
           results not always reproducible and comparable. Furthermore,
-          in many cases, only “positive” predictions are evaluated
+          in many cases, only <q>positive</q> predictions are evaluated
           where new relations are predicted; however, some relations
           also turn out to be incorrect and are removed from a
           dataset; methods that determine whether relations are
@@ -205,7 +203,7 @@
           ontologies (for example, if <tt>R(x,C)</tt> and <tt>SubClassOf(C,D)</tt>, then
           a prediction of <tt>R(x,D)</tt> would be considered correct but less
           specific than <tt>R(x,C)</tt>). For this set of relations we use the
-          evaluation metrics developed by <a href="https://www.biofunctionprediction.org/">CAFA</a>, in particular <tt>F_max</tt>
+          <a href="https://academic.oup.com/bioinformatics/article/29/13/i53/195366">evaluation metrics</a> developed by <a href="https://www.biofunctionprediction.org/">CAFA</a>, in particular <tt>F_max</tt>
           and <tt>S_min</tt>, which take class specificity into account.
 
         </p>
@@ -232,12 +230,11 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          Submissions should be made at biochallenge.biohackathon.org. 
           All team members need to register at the website using their emails or
           orcid accounts. In order to form a team, a member needs to register
           the team and invite all other members to join the team. Any of the
           team members can submit predictions. Submissions should be submitted
-          in the format of compressed tab-separated file (tsv.gz, tsv.zip) with
+          in the format of compressed tab-separated file (<tt>tsv.gz</tt>, <tt>tsv.zip</tt>) with
           four columns:
           <ul>
             <li>subject</li>
