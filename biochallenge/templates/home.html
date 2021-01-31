@@ -19,59 +19,16 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          The prediction of relations between biological entities has long been a central
-          component of computational biology. Knowledge graphs
-          in biology can be used to represent biological networks and
-          also to represent propositions believed to be true within a
-          domain. Networks and knowledge graph form a crucial
-          component of life science infrastructure where hundreds of
-          data- and knowledge-bases have been developed that make
-          their information available in a graph-based form.
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <p class="lead">
-          Networks and knowledge graphs are not only used to store and
-          retrieve information but are also used for network- and
-          knowledge-based analyses. One type of analysis includes
-          determining whether a relation holds true or false within a
-          knowledge base; this question can be solved deductively,
-          inductively, or transductively. In the past 5 years, we have
-          witnessed a proliferation of methods based on machine
-          learning that address the problem of predicting relations
-          from graph-based knowledge; these relational learning
-          methods include knowledge graph embedding methods and graph
-          neural networks. While these methods are developed to solve
-          tasks in many knowledge graphs, they are rarely evaluated
-          and compared on a variety of biological knowledge. Moreover,
-          every evaluation and comparison represents only a snapshot
-          in time and may depend on a context that includes
-          parameters, training/testing splits, random seeds, or
-          various pre- and post-processing steps, thereby making
-          results not always reproducible and comparable. Furthermore,
-          in many cases, only <q>positive</q> predictions are evaluated
-          where new relations are predicted; however, some relations
-          also turn out to be incorrect and are removed from a
-          dataset; methods that determine whether relations are
-          wrongly asserted are currently underrepresented.
-
-        </p>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-12">
-        <p class="lead">
-          Biological knowledge evolves rapidly, and the corresponding
-          data- and knowledge-bases are updated regularly to reflect
-          new discoveries. This provides an opportunity for a
-          time-based, empirical, and continuous evaluation of relation
-          prediction methods in a wide area of domains. The Continuous
-          Evaluation of Relational Learning in Biology (CERLIB) aims
-          to collect and evaluate relation predictions in life
-          sciences using an unbiased, empirical approach based on the
-          growing body of biological knowledge.
+          Predicting relations between biological entities using
+          machine learning is a common task in computational biology.
+          We aim to continuously evaluate prediction methods as new
+          biological knowledge becomes available. We ask individuals
+          or teams to predict biological relations.  New relations
+          between biological entities are retrieved in regular
+          intervals
+          using <a href="https://www.w3.org/TR/sparql11-query/">SPARQL
+          queries</a> and prediction results automatically evaluated
+          against the query results.
         </p>
       </div>
     </div>
@@ -98,20 +55,19 @@
           We ask any individual or team to predict biological
           relations. All submissions will be time-stamped at
           submission time. Initial submissions made to CERLIB will not
-          be <q>enrolled</q> in any challenge at submission time. We will
-          continuously (at least monthly) update a set of relations
-          with high confidence (usually reflecting experimental
-          evidence) available from several biological knowledge
-          bases. Each updated set of relations will obtain a
-          timestamp. Any challenge submission which has been made
-          before an update but is not yet enrolled will enroll in the
-          challenge at the time the updated set of relations becomes
-          available. Any submission made before the update time which
-          was already enrolled will be evaluated with respect to the
-          new set of relations becoming available. Evaluation will
-          consist of comparing predictions to the set of relations
-          that become available. Each relation type will be evaluated
-          separately.
+          be <q>enrolled</q> in any task at submission time. We will
+          frequently (at least monthly) update a set of relations with
+          high confidence (usually reflecting experimental evidence)
+          available from several biological knowledge bases. Each
+          updated set of relations will obtain a timestamp. Any
+          submission which has been made before an update but is not
+          yet enrolled will enroll in the task at the time the updated
+          set of relations becomes available. Any submission made
+          before the update time which was already enrolled will be
+          evaluated with respect to the new set of relations becoming
+          available. Evaluation will consist of comparing predictions
+          to the set of relations that become available. Each relation
+          type will be evaluated separately.
         </p>
       </div>
     </div>
@@ -124,7 +80,6 @@
           relations considered to be true at the timepoint at which the query is
           evaluated, and will be executed monthly to generate test data and
           update the evaluations.
-      
         </p>
       </div>
     </div>
@@ -135,49 +90,7 @@
   <div class="container">
 
     <h2 class="page-section-heading text-center text-uppercase
-    text-secondary mb-0">Subchallenges</h2>
-
-    <!-- Icon Divider -->
-    <div class="divider-custom">
-      <div class="divider-custom-line"></div>
-      <div class="divider-custom-icon">
-        <i class="fas fa-star"></i>
-      </div>
-      <div class="divider-custom-line"></div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-12">
-        <p class="lead">
-         The aim of CERLIB is to evaluate methods for relation
-         prediction in a broad sense. For this purpose, we define
-         three subchallenges, differentiated by the types of data you
-         can use to make your predictions:
-         <ul>
-           <li>
-             Learning from graphs: you can use the graph (in RDF)
-             provided by the challenge, but no other information.</li>
-           <li>
-             Learning from text: you can use MEDLINE or PubMed Central
-             full text articles for predicting relations, but no other
-             information.  </li>
-           <li>
-             Free: any source can be used, such as combinations of
-             graphs and text, and external data.
-           </li>
-         </ul>
-        </p>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<section class="page-section">
-  <div class="container">
-
-    <h2 class="page-section-heading text-center text-uppercase
-    text-secondary mb-0">Evaluation</h2>
+    text-secondary mb-0">Evaluation metrics</h2>
 
     <!-- Icon Divider -->
     <div class="divider-custom">
@@ -200,12 +113,16 @@
           relations between biological entities and classes in
           ontologies; the aim of the second set of metrics is to
           account for the semantics of relations to classes in
-          ontologies (for example, if <tt>R(x,C)</tt> and <tt>SubClassOf(C,D)</tt>, then
-          a prediction of <tt>R(x,D)</tt> would be considered correct but less
-          specific than <tt>R(x,C)</tt>). For this set of relations we use the
-          <a href="https://academic.oup.com/bioinformatics/article/29/13/i53/195366">evaluation metrics</a> developed by <a href="https://www.biofunctionprediction.org/">CAFA</a>, in particular <tt>F_max</tt>
-          and <tt>S_min</tt>, which take class specificity into account.
-
+          ontologies (for example, if <tt>R(x,C)</tt>
+          and <tt>SubClassOf(C,D)</tt>, then a prediction
+          of <tt>R(x,D)</tt> would be considered correct but less
+          specific than <tt>R(x,C)</tt>). For this set of relations we
+          use the
+          <a href="https://academic.oup.com/bioinformatics/article/29/13/i53/195366">evaluation
+          metrics</a> developed
+          by <a href="https://www.biofunctionprediction.org/">CAFA</a>,
+          in particular <tt>F_max</tt> and <tt>S_min</tt>, which take
+          class specificity into account.
         </p>
       </div>
     </div>
@@ -230,12 +147,13 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          All team members need to register at the website using their emails or
-          orcid accounts. In order to form a team, a member needs to register
-          the team and invite all other members to join the team. Any of the
-          team members can submit predictions. Submissions should be submitted
-          in the format of compressed tab-separated file (<tt>tsv.gz</tt>, <tt>tsv.zip</tt>) with
-          four columns:
+          All team members need to register at the website using their
+          emails or orcid accounts. In order to form a team, a member
+          needs to register the team and invite all other members to
+          join the team. Any of the team members can submit
+          predictions. Submissions should be submitted in the format
+          of compressed tab-separated file
+          (<tt>tsv.gz</tt>, <tt>tsv.zip</tt>) with four columns:
           <ul>
             <li>subject</li>
             <li>predicate</li>
