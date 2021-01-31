@@ -5,9 +5,9 @@
   <div class="row">
     <div class="col-12">
       <a
-	href="{% url "challenge_submit" object.release.pk %}"
-	class="btn btn-primary btn-lg float-right">
-	Submit
+        href="{% url "challenge_submit" object.release.pk %}"
+        class="btn btn-primary btn-lg float-right">
+        Submit
       </a>
     </div>
   </div>
@@ -16,18 +16,33 @@
   <div class="col-12">
     <h2>{{ object.name }}</h2>
     <img class="img-fluid" src="{{ object.image.url }}"/>
-    {{ object.description }}
+    {{ object.description|safe }}
   </div>
 </div>
 <div class="row">
   <div class="col-12">
-    <h2>Data download and evaluation link</h2>
-    <p>Dataset download: <a class="btn btn-primary btn-lg" href="{{
-    object.release.get_data_url }}">{{ object.release.get_data_url
-	}}</a></p>
+    <h2>Data download and evaluation</h2>
+    <p>Dataset download: <a class="btn btn-primary btn-lg" href="{{ object.release.get_data_url }}">{{ object.release.get_data_url }}</a></p>
     <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
     <strong> Query: </strong>
     <pre><code>{{ object.sparql_query }}</code></pre>
   </div>
+</div>
+<div class="row">
+  <div class="col-12">
+    <h2>Rankings</h2>
+      <a class="btn btn-primary btn-lg" href="{% url "challenge_submissions" object.release.pk %}">Ranking</a>
+    </div>
+    <div class="col-12">
+      <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
+      <pre><code>{{ object.sparql_query }}</code></pre>
+    </div>
+  </div>
+</div>
+
+  
+
+
+
 </div>
 {% endblock %}

@@ -6,7 +6,13 @@ from django.conf import settings
 import os
 import json
 import datetime
-from challenge.evaluation.hits_k import compute_hits_10
+from time import sleep
+from celery import shared_task
+from challenge.evaluation.parseAxioms import read_triplets_file
+from challenge.evaluation.triplets import Triplet
+from scipy.stats import rankdata
+from accounts.models import Team
+
 
 class Challenge(models.Model):
     DRAFT = 'draft'
@@ -27,6 +33,7 @@ class Challenge(models.Model):
     name = models.CharField(max_length=127)
     status = models.CharField(max_length=15, choices=STATUSES)
     description = models.TextField()
+    download_link = models.CharField(max_length=255, null=True, blank=True)
     image = models.ImageField(upload_to='challenges/', null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     modified_date = models.DateTimeField(default=timezone.now)
@@ -57,7 +64,7 @@ class Release(models.Model):
         rel_dir = os.path.join(
             settings.MEDIA_ROOT,
             f'{self.challenge.id:06d}',
-            f'{self.id:06d}')
+            f'{self.version}')
         return rel_dir
 
     def get_config_file(self):
@@ -67,23 +74,8 @@ class Release(models.Model):
         return '/' + os.path.join(self.get_dir(), 'data.tsv.gz')
 
 
-def create_release_files(sender, instance, created, **kwargs):
-    os.makedirs(instance.get_dir(), exist_ok=True)
-    config_file = instance.get_config_file()
-    f = open(config_file, 'w')
-    data = {
-        'endpoint': instance.sparql_endpoint,
-        'query': instance.sparql_query,
-        'dir': instance.get_dir()}
-    data_json = json.dumps(data)
-    f.write(data_json)
-    f.close()
-
-post_save.connect(create_release_files, sender=Release)
-
-
 def submission_dir_path(instance, filename):
-    return f'submissions/{instance.user.id:06d}/{instance.release.id:06d}/{filename}'
+    return f'submissions/{instance.team.id:06d}/{instance.release.id:06d}/{filename}'
 
 class Submission(models.Model):
     EVALUATION = 'evaluation'
@@ -96,8 +88,9 @@ class Submission(models.Model):
         (WITHDRAWN, WITHDRAWN),
         (ERROR, ERROR))
     
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name='submissions')
+    team = models.ForeignKey(
+        Team, on_delete=models.SET_NULL, null=True,
+        related_name='submissions')
     release = models.ForeignKey(
         Release, on_delete=models.SET_NULL, null=True,
         related_name='submissions')
@@ -105,14 +98,5 @@ class Submission(models.Model):
     predictions_file = models.FileField(upload_to=submission_dir_path)
     status = models.CharField(max_length=31, default=EVALUATION)
     hits_10 = models.FloatField(null=True)
-
-
-def evaluate_submission(sender, instance, **kwargs):
-    post_save.disconnect(evaluate_submission, sender = Submission)
-    filename = instance.predictions_file.path
-    ground_truth_file = os.getcwd() + '/biochallenge/apps/challenge/evaluation/example_gt.tsv'
-    compute_hits_10.delay(instance.id, ground_truth_file, filename, 10).get()
-    # instance.hits_10 = hits_10_job.get()
-    # instance.save()
-
-post_save.connect(evaluate_submission, sender = Submission)
+    auc = models.FloatField(null=True)
+    

@@ -6,13 +6,14 @@
   <div class="row">
     <h2>My submissions</h2>
     <table class="table table-striped">
-      <thead><th>#</th><th>Challenge</th><th>Release</th><th>Date</th><th>File</th><th>Status</th></thead>
+      <thead><th>#</th><th>Challenge</th><th>Release</th><th>Team</th><th>Date</th><th>File</th><th>Status</th></thead>
       <tbody>
 	{% for sub in object_list %}
 	<tr>
 	  <td> {{ forloop.counter }} </td>
 	  <td> {{ sub.release.challenge.name }} </td>
 	  <td> {{ sub.release.version }} </td>
+          <td> {{ sub.team }} </td>
 	  <td> {{ sub.date }} </td>
 	  <td>
 	    <a href="{{ sub.predictions_file.url }}">

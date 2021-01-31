@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.views import generic as views
 from django.contrib.auth.models import User
 from challenge.models import (
-    Challenge, Submission)
+    Challenge, Submission, Release)
 from challenge.forms import (
     SubmissionForm)
 from challenge.mixins import ReleaseMixin
@@ -24,6 +24,48 @@ class ChallengeDetailView(views.DetailView):
     template_name = 'challenge/view.html'
 
 
+class ChallengeSubmissionListView(views.ListView):
+    model = Submission
+    template_name = 'challenge/challenge_submissions.html'
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(ChallengeSubmissionListView, self).get_queryset(
+            *args, **kwargs)
+        return queryset.filter(release= self.kwargs.get('release_pk'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ChallengeSubmissionListView, self).get_context_data(*args, **kwargs)
+        release = Release.objects.get(pk=self.kwargs.get('release_pk'))
+        context['release'] = release
+        return context
+        
+
+# class ChallengeDetailView2(views.DetailView):
+#     #model = Submission
+#     model = Challenge
+#     template_name = 'challenge/view.html'
+
+#     def get_context_data(self, **kwargs):
+#         context = super(ChallengeDetailView2, self).get_context_data(**kwargs)
+#         context['submissions'] = Submission.objects.all()
+#         return context
+
+
+    # def get_queryset(self, *args, **kwargs):
+    #     queryset = super(AllSubmissionListView, self).get_queryset(
+    #         *args, **kwargs)
+    #     return queryset# .filter(challenge=self.request.challenge)
+
+
+class ChallengeListView(views.ListView):
+    model = Challenge
+    template_name = 'challenge/list.html'
+
+    def get_queryset(self, *args, **kwargs):
+        queryset = super(ChallengeListView, self).get_queryset(
+            *args, **kwargs)
+        return queryset.filter(status=Challenge.ACTIVE)
+
 class SubmissionCreateView(ReleaseMixin, FormRequestMixin, views.CreateView):
     model = Submission
     template_name = 'challenge/submit.html'
@@ -40,4 +82,4 @@ class SubmissionListView(views.ListView):
     def get_queryset(self, *args, **kwargs):
         queryset = super(SubmissionListView, self).get_queryset(
             *args, **kwargs)
-        return queryset.filter(user=self.request.user)
+        return queryset.filter(team__members=self.request.user)

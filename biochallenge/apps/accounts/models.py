@@ -34,7 +34,7 @@ post_save.connect(create_user_profile, sender=User)
 class Team(models.Model):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(max_length=1024)
-    logo = models.ImageField()
+    logo = models.ImageField(null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_user = models.ForeignKey(
         User, related_name='created_teams', null=True, on_delete=models.SET_NULL)
@@ -46,6 +46,10 @@ class Team(models.Model):
             return queryset.get()
         return None
 
+    def __str__(self):
+        return self.name
+
+
 class MemberManager(models.Manager):
     use_for_related_fields = True
 
@@ -53,7 +57,7 @@ class MemberManager(models.Manager):
         self.create(user=user, team=team)
 
     def add_admin_member(self, user, team):
-        self.create(user=user, team=team, is_admin=True)
+        self.create(user=user, team=team, is_admin=True, status=Member.ACTIVE)
 
     def remove_member(self, user, team):
         self.filter(user=user, team=team).delete()

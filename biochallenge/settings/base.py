@@ -208,10 +208,11 @@ CELERY_TASK_ACKS_LATE = True
 CELERY_TASK_PUBLISH_RETRY = True
 CELERY_WORKER_DISABLE_RATE_LIMITS = False
 
+
 # By default we will ignore result
 # If you want to see results and try out tasks interactively, change it to False
 # Or change this setting on tasks level
-CELERY_TASK_IGNORE_RESULT = True
+CELERY_TASK_IGNORE_RESULT = False
 CELERY_RESULT_EXPIRES = 600
 
 FILE_UPLOAD_HANDLERS = [
@@ -220,6 +221,7 @@ FILE_UPLOAD_HANDLERS = [
 ]
 
 FILE_UPLOAD_PERMISSIONS = 0o644
+
 
 RECAPTCHA_PRIVATE_KEY = '6LefajoUAAAAAEiswDUvk1quNKpTJCg49gwrLXpb'
 RECAPTCHA_PUBLIC_KEY = '6LefajoUAAAAAOAWkZnaz-M2lgJOIR9OF5sylXmm'

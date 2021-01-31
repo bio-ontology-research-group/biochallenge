@@ -1,0 +1,71 @@
+{% extends 'challenge/base.html' %}
+
+{% block content %}
+<div class="challenge">
+<div class="container">
+  <div class="row">
+    <h2>{{ release.challenge.name }} Submissions Ranking</h2>
+ 
+  </div>
+
+  <table id="subs" class="table-striped dataTable">
+    <thead>
+      <th class="no-sort">#</th>
+      <th class="no-sort">Release</th>
+      <th class="no-sort">User</th>
+      <th class="sorting" >Hits@10</th>
+      <th class="sorting" >AUC</th>
+
+    </thead>
+    <tbody>
+      {% for sub in object_list %}
+      <tr>
+          <td> {{ forloop.counter }} </td>
+          <td> {{ sub.release.version }} </td>
+          <td> {{ sub.team }} </td>      
+          <td> {{ sub.hits_10 }} </td>
+          <td> {{ sub.auc }} </td>
+
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+
+</div>
+</div>
+
+
+    
+<script>
+  $(document).ready(function() {
+    var t = $('#subs').DataTable( {
+     
+      "order": [[ 3, "desc" ]],
+
+      "ordering": true,
+      columnDefs: [{
+                    orderable: false,
+                    targets: "no-sort"
+                  },
+
+                  {
+                    searchable: false,
+                    orderable: false,
+                    targets: 0
+                  }
+                ]
+
+    } );
+
+    t.on('order.dt', function () {
+      t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        cell.innerHTML = i+1;
+      } );
+    } ).draw();
+
+  } );     
+</script>
+
+{% endblock %}
+
