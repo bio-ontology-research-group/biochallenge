@@ -34,7 +34,7 @@ post_save.connect(create_user_profile, sender=User)
 class Team(models.Model):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(max_length=1024)
-    logo = models.ImageField()
+    logo = models.ImageField(null=True, blank=True)
     created_date = models.DateTimeField(default=timezone.now)
     created_user = models.ForeignKey(
         User, related_name='created_teams', null=True, on_delete=models.SET_NULL)
