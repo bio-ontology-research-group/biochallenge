@@ -12,20 +12,22 @@
     </div>
   </div>
 </div>
-  <div class="row">
-    <div class="col-12">
-      <h2>{{ object.name }}</h2>
-      <img class="img-fluid" src="{{ object.image.url }}"/>
-      <p>{{ object.description }}</p>
-      <a class="btn btn-primary btn-lg" href="{{ object.release.get_data_url }}">Download</a>
-    </div>
+<div class="row">
+  <div class="col-12">
+    <h2>{{ object.name }}</h2>
+    <img class="img-fluid" src="{{ object.image.url }}"/>
+    {{ object.description }}
   </div>
 </div>
-  <div class="row">
-    <div class="col-12">
-      <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
-      <pre><code>{{ object.sparql_query }}</code></pre>
-    </div>
+<div class="row">
+  <div class="col-12">
+    <h2>Data download and evaluation link</h2>
+    <p>Dataset download: <a class="btn btn-primary btn-lg" href="{{
+    object.release.get_data_url }}">{{ object.release.get_data_url
+	}}</a></p>
+    <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
+    <strong> Query: </strong>
+    <pre><code>{{ object.sparql_query }}</code></pre>
   </div>
 </div>
 {% endblock %}
