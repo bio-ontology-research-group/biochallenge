@@ -4,7 +4,8 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Continuous evaluation of relational learning</h1>
+      <h1>Frequently asked questions (FAQ)</h1>
+      <h2>Why a new challenge, are there not too many already?</h2>
       <p>
 	Machine learning models are now widely applied to predict
 	biologically meaningful relations. Examples include the
@@ -16,9 +17,9 @@
 	performance measures on this set. However, such evaluation
 	methods could be prone to biases; for example, testing on a
 	randomly selected subset of data may retain some information
-	that makes predictions overly simply (or hard) and
+	that makes predictions overly simple and
 	consequently the performance measures may not accurately
-	reflect how well relations can be predicted in the future.
+	reflect how well relations can be predicted in the
       </p>
       <p>
 	One effort to resolve this issue is to perform a time-based
@@ -26,19 +27,20 @@
 	a period of waiting, these predictions are evaluated on new
 	knowledge that became available. Large-scale evaluation
 	efforts such as <a href="https://predictioncenter.org/">CASP</a> (for protein structures) or <a href="https://www.biofunctionprediction.org/">CAFA</a> (for
-	protein functions) follow such an approach.
+	protein functions) follow such an approach. However, these are
+	efforts that are run at specific time points; they do not, for
+	example, allow evaluating how model performance is
+	affected <em>when the models are used as part of the decision
+	making process</em>.
       </p>
       <p>
-	Running such a challenge takes a significant amount of time as
-	submission formats have to be defined and processed, new
-	knowledge has to be aggregated, and a ranking generated. As
-	biological database are now increasingly being made available through
-	Semantic Web technologies, in particular SPARQL endpoints, we have an opportunity to define such
-	challenges for any type of association that can be discovered
-	through (federated) SPARQL queries.
-      </p>
-      <p>
-	We provide a method to define and run challenges, to
+	Running such an evaluation usually takes a significant amount
+	of time and resources. As biological database are now
+	increasingly being made available through Semantic Web
+	technologies, in particular SPARQL endpoints, we have an
+	opportunity to define such challenges for any type of
+	association that can be discovered through (federated) SPARQL
+	queries.  We provide a method to define and run challenges, to
 	submit predictions for them and evaluate. SPARQL queries we
 	use for the challenges can be found and tested at
 	the <a href="http://biohackathon.org/rest/">BioHackathon
