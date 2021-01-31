@@ -4,7 +4,8 @@
 <div class="container">
   <div class="row">
     <div class="col-12">
-      <h1>Continuous evaluation of relational learning</h1>
+      <h1>Frequently asked questions (FAQ)</h1>
+      <h2>Why a new challenge, are there not too many already?</h2>
       <p>
 	Machine learning models are now widely applied to predict
 	biologically meaningful relations. Examples include the
@@ -16,9 +17,9 @@
 	performance measures on this set. However, such evaluation
 	methods could be prone to biases; for example, testing on a
 	randomly selected subset of data may retain some information
-	that makes predictions overly simply (or hard) and
+	that makes predictions overly simple and
 	consequently the performance measures may not accurately
-	reflect how well relations can be predicted in the future.
+	reflect how well relations can be predicted in the
       </p>
       <p>
 	One effort to resolve this issue is to perform a time-based
@@ -26,23 +27,52 @@
 	a period of waiting, these predictions are evaluated on new
 	knowledge that became available. Large-scale evaluation
 	efforts such as <a href="https://predictioncenter.org/">CASP</a> (for protein structures) or <a href="https://www.biofunctionprediction.org/">CAFA</a> (for
-	protein functions) follow such an approach.
+	protein functions) follow such an approach. However, these are
+	efforts that are run at specific time points; they do not, for
+	example, allow evaluating how model performance is
+	affected <em>when the models are used as part of the decision
+	making process</em>.
       </p>
       <p>
-	Running such a challenge takes a significant amount of time as
-	submission formats have to be defined and processed, new
-	knowledge has to be aggregated, and a ranking generated. As
-	biological database are now increasingly being made available through
-	Semantic Web technologies, in particular SPARQL endpoints, we have an opportunity to define such
-	challenges for any type of association that can be discovered
-	through (federated) SPARQL queries.
-      </p>
-      <p>
-	We provide a method to define and run challenges, to
+	Running such an evaluation usually takes a significant amount
+	of time and resources. As biological database are now
+	increasingly being made available through Semantic Web
+	technologies, in particular SPARQL endpoints, we have an
+	opportunity to define such challenges for any type of
+	association that can be discovered through (federated) SPARQL
+	queries.  We provide a method to define and run challenges, to
 	submit predictions for them and evaluate. SPARQL queries we
 	use for the challenges can be found and tested at
 	the <a href="http://biohackathon.org/rest/">BioHackathon
 	SPARQlist</a>.
+      </p>
+      <h2>What kind of predictions do you evaluate?</h2>
+      <p>We evaluate the prediction for <em>relations</em> between
+	(biological) entities. Entities and relations are identified by
+	an <a href="https://tools.ietf.org/html/rfc3987">IRI</a>, and
+	predictions may be associated with a confidence score. The
+	predictions can be made using any model,
+	including <a href="https://en.wikipedia.org/wiki/Link_prediction">link
+	  prediction</a>
+	models, <a href="https://en.wikipedia.org/wiki/Text_mining">text
+	  mining</a>, or others. In the future, we may introduce
+	specific sub-challenges that focus on using only particular
+	types of data (such as text-only, or graph-only, challenges).
+      </p>
+      <h2>Will you evaluate <em>negative</em> predictions?</h2>
+      <p>
+	Not yet. We consider a <quote>negative</quote> prediction a
+	prediction that an existing relation is false. We plan to
+	include these predictions in our evaluation in the future.
+      </p>
+      <h2>Is there a meeting/workshop/conference associated with
+	CERLIB to discuss results and new ideas?</h2>
+      <p>
+	Yes, we plan to meet annually at
+	the <a href="https://www.bio-ontologies.org.uk/">Bio-Ontologies
+	SIG</a> at ISMB. Additionally, we intend to publish the
+	methods used and developed as part of CERLIB in a journal
+	special issue.
       </p>
     </div>
   </div>
