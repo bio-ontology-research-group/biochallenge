@@ -20,15 +20,13 @@
       <a class="btn btn-primary btn-lg" href="{{ object.download_link }}">Download</a>
       <a class="btn btn-primary btn-lg" href="{% url "challenge_submissions" object.release.pk %}">Ranking</a>
     </div>
-  </div>
-</div>
-  <div class="row">
     <div class="col-12">
       <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
       <pre><code>{{ object.sparql_query }}</code></pre>
     </div>
-  </div>
 
+  </div>
+</div>
 
   
 
