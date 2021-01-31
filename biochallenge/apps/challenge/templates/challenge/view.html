@@ -12,9 +12,9 @@
   <div class="row">
     <div class="col-12">
       <h2>Data download and evaluation</h2>
-      <p>Dataset download: <a class="btn btn-primary btn-lg" href="{{ object.download_link }}">{{ object.download_link }}</a></p>
-      <p><strong> Endpoint: {{ object.sparql_endpoint }} </strong></p>
-      <p><strong> Query: </strong></p>
+      <p>Dataset download: <a href="{{ object.download_link }}">{{ object.download_link }}</a></p>
+      <p><strong> Endpoint: <a href="{{ object.sparql_endpoint }}">{{ object.sparql_endpoint }}</a></strong></p>
+      <p><strong> Query for evaluation: </strong></p>
       <p><pre><code>{{ object.sparql_query }}</code></pre></p>
     </div>
   </div>
