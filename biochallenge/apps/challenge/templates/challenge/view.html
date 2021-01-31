@@ -12,9 +12,9 @@
   <div class="row">
     <div class="col-12">
       <h2>Data download and evaluation</h2>
-      <p>Dataset download: <a class="btn btn-primary btn-lg" href="{{ object.download_link }}">{{ object.download_link }}</a></p>
-      <p><strong> Endpoint: {{ object.sparql_endpoint }} </strong></p>
-      <p><strong> Query: </strong></p>
+      <p>Dataset download: <a href="{{ object.download_link }}">{{ object.download_link }}</a></p>
+      <p><strong> Endpoint: <a href="{{ object.sparql_endpoint }}">{{ object.sparql_endpoint }}</a></strong></p>
+      <p><strong> Query for evaluation: </strong></p>
       <p><pre><code>{{ object.sparql_query }}</code></pre></p>
     </div>
   </div>
@@ -41,24 +41,23 @@
 	file containing <tt>(subject, predicate, object, score)</tt>
 	quadruples. An example file could be:
 	<pre>
-	  
-	  &lt;https://reactome.org/content/detail/R-HSA-2172127&gt; &lt;http://purl.obolibrary.org/obo/RO_0000057&gt; &lt;http://www.ncbi.nlm.nih.gov/gene/5710&gt; 0.9
-	  &lt;http://purl.obolibrary.org/obo/CHEBI_4034&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000546491&gt; 0.1
-	  &lt;http://purl.obolibrary.org/obo/CHEBI_49662&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000344604&gt; 0.231
-	  &lt;http://purl.obolibrary.org/obo/PR_P63010&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/PR_P51812&gt; 0.111
-	  &lt;http://purl.obolibrary.org/obo/MONDO_0009452&gt; &lt;http://purl.obolibrary.org/obo/RO_0002200&gt; &lt;http://purl.obolibrary.org/obo/HP_0001290&gt; 0
-	  &lt;http://purl.obolibrary.org/obo/CHEBI_46195&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000546299&gt; 1.0
-	  &lt;http://purl.obolibrary.org/obo/PR_Q8ND25&gt; &lt;http://purl.obolibrary.org/obo/RO_0002512&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000320619&gt; 0.4291
-	  &lt;http://www.ncbi.nlm.nih.gov/gene/2065&gt; &lt;http://purl.obolibrary.org/obo/RO_0002559&gt; &lt;https://www.ncbi.nlm.nih.gov/snp/rs115311663&gt; 0.1
-	  &lt;http://purl.obolibrary.org/obo/PR_Q13480-2&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/PR_P16333-1&gt; 0.5
-	  &lt;http://purl.obolibrary.org/obo/CHEBI_78802&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/GO_0006875&gt; 0
+&lt;https://reactome.org/content/detail/R-HSA-2172127&gt; &lt;http://purl.obolibrary.org/obo/RO_0000057&gt; &lt;http://www.ncbi.nlm.nih.gov/gene/5710&gt; 0.9
+&lt;http://purl.obolibrary.org/obo/CHEBI_4034&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000546491&gt; 0.1
+&lt;http://purl.obolibrary.org/obo/CHEBI_49662&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000344604&gt; 0.231
+&lt;http://purl.obolibrary.org/obo/PR_P63010&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/PR_P51812&gt; 0.111
+&lt;http://purl.obolibrary.org/obo/MONDO_0009452&gt; &lt;http://purl.obolibrary.org/obo/RO_0002200&gt; &lt;http://purl.obolibrary.org/obo/HP_0001290&gt; 0
+&lt;http://purl.obolibrary.org/obo/CHEBI_46195&gt; &lt;http://purl.obolibrary.org/obo/RO_0002434&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000546299&gt; 1.0
+&lt;http://purl.obolibrary.org/obo/PR_Q8ND25&gt; &lt;http://purl.obolibrary.org/obo/RO_0002512&gt; &lt;https://uswest.ensembl.org/Homo_sapiens/Transcript/Summary?t=ENST00000320619&gt; 0.4291
+&lt;http://www.ncbi.nlm.nih.gov/gene/2065&gt; &lt;http://purl.obolibrary.org/obo/RO_0002559&gt; &lt;https://www.ncbi.nlm.nih.gov/snp/rs115311663&gt; 0.1
+&lt;http://purl.obolibrary.org/obo/PR_Q13480-2&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/PR_P16333-1&gt; 0.5
+&lt;http://purl.obolibrary.org/obo/CHEBI_78802&gt; &lt;http://purl.obolibrary.org/obo/RO_0002436&gt; &lt;http://purl.obolibrary.org/obo/GO_0006875&gt; 0
 	</pre>
       </p>
       <p>
       <a
         href="{% url "challenge_submit" object.release.pk %}"
         class="btn btn-primary btn-lg float-right">
-        Submit
+        Create new submission
       </a>
       </p>
     </div>
