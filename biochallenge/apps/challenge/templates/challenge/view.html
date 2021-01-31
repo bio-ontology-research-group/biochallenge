@@ -10,14 +10,20 @@
         Submit
       </a>
     </div>
-    <div class="col-6">
+  </div>
+</div>
+  <div class="row">
+    <div class="col-12">
       <h2>{{ object.name }}</h2>
       <img class="img-fluid" src="{{ object.image.url }}"/>
       <p>{{ object.description|safe }}</p>
       <a class="btn btn-primary btn-lg" href="{{ object.download_link }}">Download</a>
       <a class="btn btn-primary btn-lg" href="{% url "challenge_submissions" object.release.pk %}">Ranking</a>
     </div>
-    <div class="col-6">
+  </div>
+</div>
+  <div class="row">
+    <div class="col-12">
       <strong> Endpoint: {{ object.sparql_endpoint }} </strong>
       <pre><code>{{ object.sparql_query }}</code></pre>
     </div>
