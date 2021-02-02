@@ -2,9 +2,11 @@
 {% load static %}
 
 {% block content %}
+<h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Continuous Evaluation of Relational Learning in Biomedicine (CERLIB)</h2>
+
 <section class="page-section">
   <div class="container">
-
+    
     <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Rationale</h2>
 
     <!-- Icon Divider -->
@@ -68,14 +70,14 @@
         <p class="lead">
           With respect to submissions, please keep the following in
           mind:
-          <ul>
-            <li>All submissions will also be time-stamped at
-              submission time.</li>
-            <li>Initial submissions made to CERLIB will not be enrolled in any task at submission time.</li>
-            <li>Any submission which has been made before an update but is not yet enrolled will enroll in the task at the time the updated set of relations becomes available.</li>
-            <li>Any submission made before the update time which was already enrolled will be evaluated with respect to the new set of relations becoming available.</li>
-          </ul>
         </p>
+        <ul class="lead">
+          <li>All submissions will also be time-stamped at
+            submission time.</li>
+          <li>Initial submissions made to CERLIB will not be enrolled in any task at submission time.</li>
+          <li>Any submission which has been made before an update but is not yet enrolled will enroll in the task at the time the updated set of relations becomes available.</li>
+          <li>Any submission made before the update time which was already enrolled will be evaluated with respect to the new set of relations becoming available.</li>
+        </ul>
         <p class="lead">
           For each challenge, we provide two types of information: a
           dataset usually in RDF, and a SPARQL query to an endpoint
@@ -188,12 +190,14 @@
           Submissions should be submitted in the format
           of compressed tab-separated file
           (<tt>tsv.gz</tt>, <tt>tsv.zip</tt>) with four columns:
-          <ul>
-            <li>subject</li>
-            <li>predicate</li>
-            <li>object</li>
-            <li>prediction score</li>
-          </ul>
+        </p>
+        <ul class="lead">
+          <li>subject</li>
+          <li>predicate</li>
+          <li>object</li>
+          <li>prediction score</li>
+        </ul>
+        <p class="lead">
 	  To submit, first find an open <a href="{% url "challenges" %}">Task</a>
 	  and follow the instructions.
         </p>
