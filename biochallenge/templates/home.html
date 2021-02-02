@@ -2,9 +2,11 @@
 {% load static %}
 
 {% block content %}
+<h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Continuous Evaluation of Relational Learning in Biomedicine (CERLIB)</h2>
+
 <section class="page-section">
   <div class="container">
-
+    
     <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Rationale</h2>
 
     <!-- Icon Divider -->
@@ -20,12 +22,13 @@
       <div class="col-md-12">
         <p class="lead">
           Predicting relations between biological entities using
-          machine learning is a common task in computational biology.
-          We aim to continuously evaluate prediction methods as new
-          biological knowledge becomes available. We ask individuals
-          or teams to predict biological relations.  New relations
-          between biological entities are retrieved in regular
-          intervals
+          machine learning is a common and important task in
+          computational biology.  We propose a new challenge which
+          aims to continuously evaluate prediction methods as new
+          biological knowledge becomes available. We invite
+          individuals or teams to predict biological relations.  New
+          relations between biological entities are retrieved in
+          regular intervals
           using <a href="https://www.w3.org/TR/sparql11-query/">SPARQL
           queries</a> and prediction results automatically evaluated
           against the query results.
@@ -52,20 +55,11 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          We ask any individual or team to predict biological
-          relations. All submissions will be time-stamped at
-          submission time. Initial submissions made to CERLIB will not
-          be <q>enrolled</q> in any task at submission time. We will
-          frequently (at least monthly) update a set of relations with
-          high confidence (usually reflecting experimental evidence)
-          available from several biological knowledge bases. Each
-          updated set of relations will obtain a timestamp. Any
-          submission which has been made before an update but is not
-          yet enrolled will enroll in the task at the time the updated
-          set of relations becomes available. Any submission made
-          before the update time which was already enrolled will be
-          evaluated with respect to the new set of relations becoming
-          available. Evaluation will consist of comparing predictions
+          We will frequently (at least monthly) update a set of
+          relations with high confidence (usually reflecting
+          experimental evidence) available from several biological
+          knowledge bases. Each updated set of relations will obtain a
+          timestamp. Evaluation will consist of comparing predictions
           to the set of relations that become available. Each relation
           type will be evaluated separately.
         </p>
@@ -74,12 +68,24 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          For each challenge, we provide two types of information: a dataset
-          usually in RDF, and a SPARQL query to an endpoint serving the
-          evaluation data. The SPARQL query is used to retrieve the set of
-          relations considered to be true at the timepoint at which the query is
-          evaluated, and will be executed monthly to generate test data and
-          update the evaluations.
+          With respect to submissions, please keep the following in
+          mind:
+        </p>
+        <ul class="lead">
+          <li>All submissions will also be time-stamped at
+            submission time.</li>
+          <li>Initial submissions made to CERLIB will not be enrolled in any task at submission time.</li>
+          <li>Any submission which has been made before an update but is not yet enrolled will enroll in the task at the time the updated set of relations becomes available.</li>
+          <li>Any submission made before the update time which was already enrolled will be evaluated with respect to the new set of relations becoming available.</li>
+        </ul>
+        <p class="lead">
+          For each challenge, we provide two types of information: a
+          dataset usually in RDF, and a SPARQL query to an endpoint
+          serving the evaluation data. The SPARQL query is used to
+          retrieve the set of relations considered to be true at the
+          timepoint at which the query is evaluated, and will be
+          executed monthly to generate test data and update the
+          evaluations.
         </p>
       </div>
     </div>
@@ -104,12 +110,17 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          We use two types of evaluation metrics. The first applies to
+          We use two types of evaluation metrics.
+        </p>
+        <p class="lead">
+          Metric One: The first applies to
           relations in which both the subject and object are
           considered without any semantics that may arise from
           specific axioms within the graph. For these, we compute
           recall at ranks (Hits@k), AUROC, AUPR, and mean reciprocal
-          rank (MRR). We use a second type of evaluation metrics for
+          rank (MRR).
+        </p>
+        <p class="lead">Metric Two: We use a second type of evaluation metrics for
           relations between biological entities and classes in
           ontologies; the aim of the second set of metrics is to
           account for the semantics of relations to classes in
@@ -123,6 +134,35 @@
           by <a href="https://www.biofunctionprediction.org/">CAFA</a>,
           in particular <tt>F_max</tt> and <tt>S_min</tt>, which take
           class specificity into account.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="page-section">
+  <div class="container">
+
+    <h2 class="page-section-heading text-center text-uppercase
+    text-secondary mb-0">Registering</h2>
+
+    <!-- Icon Divider -->
+    <div class="divider-custom">
+      <div class="divider-custom-line"></div>
+      <div class="divider-custom-icon">
+        <i class="fas fa-star"></i>
+      </div>
+      <div class="divider-custom-line"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-12">
+        <p class="lead">
+          All team members need to register at the website using their
+          emails or orcid accounts. In order to form a team, a member
+          needs to register the team and invite all other members to
+          join the team. Any of the team members can submit
+          predictions.
         </p>
       </div>
     </div>
@@ -147,19 +187,17 @@
     <div class="row">
       <div class="col-md-12">
         <p class="lead">
-          All team members need to register at the website using their
-          emails or orcid accounts. In order to form a team, a member
-          needs to register the team and invite all other members to
-          join the team. Any of the team members can submit
-          predictions. Submissions should be submitted in the format
+          Submissions should be submitted in the format
           of compressed tab-separated file
           (<tt>tsv.gz</tt>, <tt>tsv.zip</tt>) with four columns:
-          <ul>
-            <li>subject</li>
-            <li>predicate</li>
-            <li>object</li>
-            <li>prediction score</li>
-          </ul>
+        </p>
+        <ul class="lead">
+          <li>subject</li>
+          <li>predicate</li>
+          <li>object</li>
+          <li>prediction score</li>
+        </ul>
+        <p class="lead">
 	  To submit, first find an open <a href="{% url "challenges" %}">Task</a>
 	  and follow the instructions.
         </p>

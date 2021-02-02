@@ -71,7 +71,7 @@ class Release(models.Model):
         return os.path.join(self.get_dir(), 'config.json')
 
     def get_data_url(self):
-        return '/' + os.path.join(self.get_dir(), 'data.tsv.gz')
+        return '/' + os.path.join(self.get_dir(), 'data.csv.gz')
 
 
 def submission_dir_path(instance, filename):

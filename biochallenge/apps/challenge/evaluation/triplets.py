@@ -37,6 +37,10 @@ class Triplet():
     def score(self):
         return self.__score
 
+    @score.setter
+    def score(self, value):
+        self.__score = value
+
     @classmethod
     def create_valid_triplet(cls, string):
         # will try to parse axioms of the form: "ENTITY_1 SubClassOf RELATION some ENTITY_2"
