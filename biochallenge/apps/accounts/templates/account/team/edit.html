@@ -34,6 +34,19 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <form method="POST" action="{% url "team_member_invite" object.pk %}" class="form">
+    {% csrf_token %}
+    {% for field in invite_form %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {{ field|add_class:"form-control"}}
+      {{ field.errors }}
+    </div>
+    {% endfor %}
+    {{ form.non_field_errors }}
+    <button type="submit" name="action" class="btn btn-primary">Invite</button>
+  </form>
   
 </div>
 </div>

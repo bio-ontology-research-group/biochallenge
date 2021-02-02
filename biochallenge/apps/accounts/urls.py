@@ -2,7 +2,8 @@ from django.urls import include, path
 from django.contrib.auth.decorators import login_required
 from accounts.views import (
     ProfileDetailView, ProfileUpdateView,
-    TeamCreateView, TeamUpdateView, TeamListView)
+    TeamCreateView, TeamUpdateView, TeamListView,
+    TeamMemberCreateView)
 
 
 urlpatterns = [
@@ -17,5 +18,7 @@ urlpatterns = [
         TeamCreateView.as_view()), name='team_create'),
     path('teams/edit/<int:pk>', login_required(
         TeamUpdateView.as_view()), name='team_edit'),
+    path('teams/invitemember/<int:team_pk>', login_required(
+        TeamMemberCreateView.as_view()), name='team_member_invite'),
 
 ]

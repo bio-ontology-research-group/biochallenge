@@ -65,3 +65,28 @@ class TeamForm(forms.ModelForm):
         Member.objects.add_admin_member(self.request.user, self.instance)
         return self.instance
         
+
+
+class TeamMemberInviteForm(forms.ModelForm):
+
+    class Meta:
+        model = Member
+        fields = ['user']
+
+    def __init__(self, *args, **kwargs):
+        self.team = kwargs.pop('team', None)
+        super(TeamMemberInviteForm, self).__init__(*args, **kwargs)
+
+    def clean_user(self):
+        user = self.cleaned_data['user']
+        exists = Member.objects.filter(team=self.team, user=user).exists()
+        if exists:
+            raise forms.ValidationError('This member already invited!')
+        return user
+
+    def save(self):
+        self.instance = super(TeamMemberInviteForm, self).save(commit=False)
+        self.instance.team = self.team
+        self.instance.save()
+
+        return self.instance
