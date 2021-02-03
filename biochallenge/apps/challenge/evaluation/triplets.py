@@ -19,6 +19,12 @@ class Triplet():
         return on_entity_1 and on_relation and on_entity_2
 
 
+    def __key(self):
+        return (self.__entity_1, self.__entity_2, self.__relation, self.__score)
+
+    def __hash__(self):
+        return hash(self.__key())
+
     @property
     def entity_1(self):
         return self.__entity_1
