@@ -20,7 +20,7 @@ class Triplet():
 
 
     def __key(self):
-        return (self.__entity_1, self.__entity_2, self.__relation, self.__score)
+        return (self.__entity_1, self.__relation, self.__entity_2)
 
     def __hash__(self):
         return hash(self.__key())
@@ -107,3 +107,11 @@ class Triplet():
         with open(out_file, 'w') as f:
             for triplet in triplets:
                 f.write(str(triplet)+'\n')
+
+    @classmethod
+    def to_zero(cls, triplets):
+        triplets = list(triplets)[:]
+        for i in range(len(triplets)):
+            triplets[i].score =0
+        
+        return set(triplets)

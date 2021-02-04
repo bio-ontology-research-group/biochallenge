@@ -33,18 +33,13 @@ def main(gt_file, pred_file, k):
 
 
 def compute_metrics(gt_file, pred_file, k):
-
     #Computes hits@k and AUC
 
-
-    #sleep(60)
+    # Read test file (ground truth) and submission file (predictions).
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
-    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt])
-    relations = set([t.relation for t in triplets_gt])
-    print(len(entities), len(relations))
-
+    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt] + [t.entity_1 for t in triplets_pred] + [t.entity_2 for t in triplets_pred])
 
     ent1_rels = {}
 
@@ -54,22 +49,24 @@ def compute_metrics(gt_file, pred_file, k):
         if (ent1, rel) in ent1_rels:
             continue
 
-        grouped_triplets_gt = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_gt))
+        #Extract triplets with fixed entity 1 and relation
+        grouped_triplets_gt   = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_gt))
         grouped_triplets_pred = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_pred))
 
-        all_triplets =({Triplet(ent1, rel, ent2, 0) for ent2 in entities} - grouped_triplets_pred).union(grouped_triplets_pred)
-        
+        all_triplets = ({Triplet(ent1, rel, ent2, score = 0) for ent2 in entities} - grouped_triplets_pred).union(grouped_triplets_pred)
+        all_triplets = list(all_triplets)
+
         scores = [-x.score for x in all_triplets]   
         ranking = rankdata(scores, method='average')
 
         hits = 0
         ranks = {}
         
-        for grouped_triplet in grouped_triplets_gt:
-            idx = list(all_triplets).index(grouped_triplet)
+        for grouped_triplet in list(grouped_triplets_gt):
+            idx = all_triplets.index(grouped_triplet)
             rank = ranking[idx]
+
             if rank <= k:
-                
                 hits+=1
             if not rank in ranks:
                 ranks[rank] = 0
@@ -79,7 +76,7 @@ def compute_metrics(gt_file, pred_file, k):
 
 
     hits = map(lambda x: x[0], ent1_rels.values())
-    hits =  reduce(lambda x,y: x+y, hits, 0)
+    hits =  reduce(lambda x,y: x+y, hits)
 
     ranks = map(lambda x: x[1], ent1_rels.values())
     ranks = list(map(lambda x: Counter(x), ranks))
@@ -88,8 +85,6 @@ def compute_metrics(gt_file, pred_file, k):
     result = hits/len(triplets_pred)
 
     rank_auc = compute_rank_roc(ranks,len(entities))
-
-    
 
     return result, rank_auc
 
