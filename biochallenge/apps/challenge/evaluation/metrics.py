@@ -18,10 +18,10 @@ from collections import Counter
 
 @ck.command()
 @ck.option(
-    '--gt-file',    '-gt',      default='example_gt.tsv',
+    '--gt-file',    '-gt',      default='data/example_gt.tsv',
     help = "Input file containing the new ground-truth relationships")
 @ck.option(
-    '--pred-file',  '-pred',    default='example_pred.tsv',
+    '--pred-file',  '-pred',    default='data/example_pred.tsv',
     help = "Input file containing the predcited relationships" )
 @ck.option(
     '--k',          '-k',       default=10,
@@ -33,70 +33,58 @@ def main(gt_file, pred_file, k):
 
 
 def compute_metrics(gt_file, pred_file, k):
-
     #Computes hits@k and AUC
 
-
-    #sleep(60)
+    # Read test file (ground truth) and submission file (predictions).
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
-    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt])
-    relations = set([t.relation for t in triplets_gt])
-    print(len(entities), len(relations))
+    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt] + [t.entity_1 for t in triplets_pred] + [t.entity_2 for t in triplets_pred])
 
+    ent1_rels = {}
 
-    def check_entity_1(ent1):
+    for triplet_gt in triplets_gt:
+        ent1, rel = triplet_gt.entity_1, triplet_gt.relation
+
+        if (ent1, rel) in ent1_rels:
+            continue
+
+        #Extract triplets with fixed entity 1 and relation
+        grouped_triplets_gt   = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_gt))
+        grouped_triplets_pred = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_pred))
+
+        all_triplets = ({Triplet(ent1, rel, ent2, score = 0) for ent2 in entities} - grouped_triplets_pred).union(grouped_triplets_pred)
+        all_triplets = list(all_triplets)
+
+        scores = [-x.score for x in all_triplets]   
+        ranking = rankdata(scores, method='average')
+
         hits = 0
         ranks = {}
-        print(ent1)
-        for rel in relations:
-            
-            triplets = []
-            for ent2 in entities:
-                
-                triplet =  Triplet(ent1, rel, ent2, score = 0)
+        
+        for grouped_triplet in list(grouped_triplets_gt):
+            idx = all_triplets.index(grouped_triplet)
+            rank = ranking[idx]
 
-                try:
-                    idx_pred =  triplets_pred.index(triplet)
-                except:
-                    idx_pred = None
+            if rank <= k:
+                hits+=1
+            if not rank in ranks:
+                ranks[rank] = 0
+            ranks[rank] += 1
 
-                if idx_pred != None:
-                    triplet.score = triplets_pred[idx_pred].score
-
-                triplets.append(triplet)
-
-            scores = [-x.score for x in triplets]   
-            ranking = rankdata(scores, method='average')
-
-            for i in range(len(ranking)):
-                rank = ranking[i]            
-                pred = triplets[i]
-            
-                if pred in triplets_gt and rank <= k:
-                    hits+=1
-            
-                    if not rank in ranks:
-                        ranks[rank] = 0
-                    ranks[rank] += 1
-        return hits, ranks
+        ent1_rels[(ent1, rel)] = (hits, ranks)
 
 
-    num_cores = 15
-    results = Parallel(n_jobs=num_cores)(delayed(check_entity_1)(ent1) for ent1 in entities)
+    hits = map(lambda x: x[0], ent1_rels.values())
+    hits =  reduce(lambda x,y: x+y, hits)
 
-    hits =  reduce(lambda x,y: x+y, map(lambda x: x[0], results))
-
-    ranks = map(lambda x: x[1], results)
+    ranks = map(lambda x: x[1], ent1_rels.values())
     ranks = list(map(lambda x: Counter(x), ranks))
     ranks = dict(reduce(lambda x,y: x+y, ranks))
 
     result = hits/len(triplets_pred)
 
     rank_auc = compute_rank_roc(ranks,len(entities))
-
-    
 
     return result, rank_auc
 

@@ -19,6 +19,12 @@ class Triplet():
         return on_entity_1 and on_relation and on_entity_2
 
 
+    def __key(self):
+        return (self.__entity_1, self.__relation, self.__entity_2)
+
+    def __hash__(self):
+        return hash(self.__key())
+
     @property
     def entity_1(self):
         return self.__entity_1
@@ -101,3 +107,11 @@ class Triplet():
         with open(out_file, 'w') as f:
             for triplet in triplets:
                 f.write(str(triplet)+'\n')
+
+    @classmethod
+    def to_zero(cls, triplets):
+        triplets = list(triplets)[:]
+        for i in range(len(triplets)):
+            triplets[i].score =0
+        
+        return set(triplets)

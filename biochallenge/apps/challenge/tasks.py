@@ -16,6 +16,8 @@ import json
 import requests
 import gzip
 from urllib import parse
+from functools import reduce
+from collections import Counter
 
 
 def get_release_version(endpoint):
@@ -88,45 +90,54 @@ def compute_rank_roc(ranks, n_entities):
 
 @shared_task
 def compute_metrics(submission_id, gt_file, pred_file, k):
-
     #Computes hits@k and AUC
 
-
-    #sleep(60)
+    # Read test file (ground truth) and submission file (predictions).
     triplets_gt   = read_triplets_file(gt_file)
     triplets_pred = read_triplets_file(pred_file)
 
-    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt])
+    entities = set([t.entity_1 for t in triplets_gt] + [t.entity_2 for t in triplets_gt] + [t.entity_1 for t in triplets_pred] + [t.entity_2 for t in triplets_pred])
 
-    grouped_gt   = Triplet.groupBy_entity_relation(triplets_gt)       # {rel1: [triplets with rel1], rel2: [triplets with rel2], ...}
-    grouped_pred = Triplet.groupBy_entity_relation(triplets_pred)
+    ent1_rels = {}
 
-    
-    keys = set(list(grouped_gt.keys()) + list(grouped_pred.keys()))
+    for triplet_gt in triplets_gt:
+        ent1, rel = triplet_gt.entity_1, triplet_gt.relation
 
-    hits = 0
-    ranks = {}
-    for key in keys:
-        if key in grouped_gt:
-            gt = grouped_gt[key]
-        else:
-            gt = []
-        preds = grouped_pred[key]
+        if (ent1, rel) in ent1_rels:
+            continue
 
-        scores = [-x.score for x in preds]   
+        #Extract triplets with fixed entity 1 and relation
+        grouped_triplets_gt   = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_gt))
+        grouped_triplets_pred = set(filter(lambda x: x.entity_1 == ent1 and x.relation == rel, triplets_pred))
+
+        all_triplets = ({Triplet(ent1, rel, ent2, score = 0) for ent2 in entities} - grouped_triplets_pred).union(grouped_triplets_pred)
+        all_triplets = list(all_triplets)
+
+        scores = [-x.score for x in all_triplets]   
         ranking = rankdata(scores, method='average')
 
-        for i in range(len(ranking)):
-            rank = ranking[i]            
-            pred = preds[i]
+        hits = 0
+        ranks = {}
         
-            if pred in gt and rank <= k:
+        for grouped_triplet in list(grouped_triplets_gt):
+            idx = all_triplets.index(grouped_triplet)
+            rank = ranking[idx]
+
+            if rank <= k:
                 hits+=1
-        
             if not rank in ranks:
                 ranks[rank] = 0
             ranks[rank] += 1
 
+        ent1_rels[(ent1, rel)] = (hits, ranks)
+
+
+    hits = map(lambda x: x[0], ent1_rels.values())
+    hits =  reduce(lambda x,y: x+y, hits)
+
+    ranks = map(lambda x: x[1], ent1_rels.values())
+    ranks = list(map(lambda x: Counter(x), ranks))
+    ranks = dict(reduce(lambda x,y: x+y, ranks))
 
     result = hits/len(triplets_pred)
 
@@ -138,4 +149,4 @@ def compute_metrics(submission_id, gt_file, pred_file, k):
     submission.auc = rank_auc
     submission.save()
 
-    return result
+   # return result
